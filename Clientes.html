@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logística 33 - Portal de Clientes Ultra Premium 3D</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #070a14; color: #f8fafc; overflow-x: hidden; }
+        .glass-3d {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.75), rgba(15, 23, 42, 0.9));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+        .btn-3d {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 0 #c2410c, 0 12px 24px rgba(0,0,0,0.4);
+        }
+        .btn-3d:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #c2410c, 0 4px 8px rgba(0,0,0,0.4);
+        }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.08); }
+        }
+        .animate-glow { animation: pulseGlow 2.5s infinite ease-in-out; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Barra Superior -->
+    <div class="bg-gradient-to-r from-orange-700 via-amber-600 to-orange-700 text-white text-xs py-1.5 px-4 text-center font-bold tracking-wider uppercase shadow-lg">
+        Logística 33 - Solicitud de Pedidos & Envío Ultra Premium 3D
+    </div>
+
+    <!-- Header -->
+    <header class="glass-3d sticky top-0 z-50 px-6 py-4 flex justify-between items-center border-b border-orange-500/30">
+        <div class="flex items-center space-x-3">
+            <div class="bg-gradient-to-br from-orange-500 to-amber-600 text-white font-extrabold text-xl px-3.5 py-1.5 rounded-2xl shadow-xl transform -rotate-3">L33</div>
+            <div>
+                <h1 class="text-lg font-extrabold tracking-tight text-white">Logística <span class="text-orange-500">33</span> <span class="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded-full border border-orange-500/30 ml-1">CLIENTE VIP</span></h1>
+                <p class="text-xs text-slate-400">Pinamar / Ostende • Envios Express</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-2">
+            <span class="px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center space-x-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-glow"></span>
+                <span>Sistema Online</span>
+            </span>
+        </div>
+    </header>
+
+    <main class="flex-1 p-6 max-w-6xl mx-auto w-full space-y-6">
+        <!-- Formulario de Nuevo Pedido -->
+        <div class="glass-3d p-6 rounded-3xl border border-orange-500/30">
+            <h2 class="text-base font-extrabold text-white mb-4 flex items-center space-x-2">
+                <span>📝 Solicitar Nuevo Pedido / Envío</span>
+            </h2>
+            <form onsubmit="crearPedido(event)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1 font-bold">Nombre del Cliente</label>
+                    <input type="text" id="cli-nombre" required placeholder="Ej: Juan Pérez" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1 font-bold">Rubro / Tipo</label>
+                    <select id="cli-rubro" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
+                        <option value="Gastronomía / Resto">Gastronomía / Resto</option>
+                        <option value="Farmacia / Salud">Farmacia / Salud</option>
+                        <option value="Comercio / Indumentaria">Comercio / Indumentaria</option>
+                        <option value="Mandados / Varios">Mandados / Varios</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1 font-bold">Monto del Pedido ($ Arg)</label>
+                    <input type="number" id="cli-monto" required placeholder="Ej: 12500" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
+                </div>
+                <div class="flex items-end">
+                    <button type="submit" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-2.5 rounded-xl text-sm btn-3d">🚀 Enviar Pedido</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Panel de Pedidos Activos y Estado en Mapa -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Lista de Pedidos en curso del cliente -->
+            <div class="glass-3d p-5 rounded-3xl flex flex-col min-h-[360px]">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-orange-400 mb-3">📦 Estado de Mis Pedidos</h3>
+                <div id="client-orders-list" class="space-y-3 flex-1 overflow-y-auto pr-1">
+                    <!-- Dinámico -->
+                </div>
+            </div>
+
+            <!-- Mapa de Seguimiento del Delivery -->
+            <div class="glass-3d p-5 rounded-3xl flex flex-col min-h-[360px]">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-orange-400 mb-3 flex items-center justify-between">
+                    <span>🗺️ Seguimiento GPS en Vivo</span>
+                    <span class="text-[10px] text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-500/30">Pinamar / Ostende</span>
+                </h3>
+                <div id="client-map" class="flex-1 rounded-2xl border border-slate-700/80 z-10 min-h-[280px]"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="text-center py-4 text-xs text-slate-500 border-t border-slate-800/80">
+        Global System Marcelo Muraña
+    </footer>
+
+    <script>
+        // --- MAPA LEAFLET ---
+        const map = L.map('client-map').setView([-37.1042, -56.8659], 14);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        const driverMarker = L.marker([-37.1042, -56.8659]).addTo(map).bindPopup("<b>Moto en camino hacia tu domicilio</b>").openPopup();
+
+        // --- INDEXEDDB COMPARTIDA ---
+        let db;
+        const request = indexedDB.open("Logistica33DB", 2);
+
+        request.onupgradeneeded = (e) => {
+            db = e.target.result;
+            if (!db.objectStoreNames.contains("orders")) {
+                db.createObjectStore("orders", { keyPath: "id", autoIncrement: true });
+            }
+        };
+
+        request.onsuccess = (e) => {
+            db = e.target.result;
+            loadClientOrders();
+            setInterval(loadClientOrders, 2000); // Sincronización en tiempo real
+        };
+
+        function crearPedido(e) {
+            e.preventDefault();
+            if (!db) return;
+
+            const nombre = document.getElementById('cli-nombre').value;
+            const rubro = document.getElementById('cli-rubro').value;
+            const monto = parseFloat(document.getElementById('cli-monto').value);
+            const commission = monto * 0.17; // 17% comisión agencia
+
+            const tx = db.transaction(["orders"], "readwrite");
+            const store = tx.objectStore("orders");
+            store.add({
+                cliente: nombre,
+                rubro: rubro,
+                monto: monto,
+                commission: commission,
+                timestamp: Date.now()
+            });
+
+            tx.oncomplete = () => {
+                alert("¡Pedido enviado con éxito a la central de logística!");
+                document.getElementById('cli-nombre').value = '';
+                document.getElementById('cli-monto').value = '';
+                loadClientOrders();
+            };
+        }
+
+        function loadClientOrders() {
+            if (!db) return;
+            const container = document.getElementById('client-orders-list');
+            container.innerHTML = '';
+
+            const tx = db.transaction(["orders"], "readonly");
+            const store = tx.objectStore("orders");
+            const req = store.getAll();
+
+            req.onsuccess = () => {
+                const orders = req.result;
+                if (orders.length === 0) {
+                    container.innerHTML = `<div class="text-center py-12 text-xs text-slate-500">No hay pedidos activos en este momento. ¡Crea uno arriba!</div>`;
+                    return;
+                }
+
+                orders.forEach(o => {
+                    const diffMins = Math.floor((Date.now() - o.timestamp) / 60000);
+                    container.innerHTML += `
+                        <div class="bg-slate-900/90 border border-slate-800 p-3.5 rounded-2xl flex justify-between items-center text-xs">
+                            <div>
+                                <span class="text-orange-400 font-bold">[${o.rubro}]</span> <b class="text-white text-sm">${o.cliente}</b>
+                                <div class="text-slate-400 mt-0.5">Total: <b class="text-emerald-400">$${o.monto}</b> • Hace ${diffMins} min</div>
+                            </div>
+                            <span class="px-3 py-1 rounded-xl bg-orange-500/20 text-orange-400 font-bold border border-orange-500/30">En Camino 🛵</span>
+                        </div>
+                    `;
+                });
+            };
+        }
+    </script>
+</body>
+</html>
+
