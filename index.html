@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Logística 33</title><link rel="icon" href="icon-192.png"><meta name="theme-color" content="#0a0c12"><link rel="manifest" href="manifest-pasajero.json"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Logística 33">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap">
+<style>
+:root{--ink:#071a2b;--ink2:#0f3047;--teal:#0e8a86;--teal2:#0a6866;--gold:#e0b04f;--gold2:#a77c1c;--foam:#eef4f7;--line:#d3e0e8;--mut:#5b7283;--ok:#12a672;--er:#d6453d}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.5 Manrope,"Segoe UI",system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;background:radial-gradient(900px 500px at 90% -5%,#cfe8ea 0,transparent 60%),radial-gradient(700px 500px at -10% 30%,#f3e9d2 0,transparent 55%),linear-gradient(180deg,#e9f1f5,#f8fbfc) fixed}
+.hero{position:relative;background:var(--ink);color:#fff;overflow:hidden;perspective:1100px;border-bottom:3px solid var(--gold)}
+.tiles{position:absolute;inset:-20px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;transform-style:preserve-3d}
+.tiles div{background:#000 center/cover;filter:brightness(.7) saturate(1.05);scale:1.12;translate:calc(var(--mx,0)*-16px) calc(var(--my,0)*-9px);transition:translate .5s ease-out;animation:kb 26s ease-in-out infinite alternate;border-radius:10px;box-shadow:0 20px 40px #0008}
+.tiles div:nth-child(1){transform:rotateY(8deg) translateZ(-30px)}.tiles div:nth-child(3){transform:rotateY(-8deg) translateZ(-30px)}
+@keyframes kb{to{scale:1.26}}
+.hero:before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(95deg,#04101c 8%,#04101cd0 45%,#0e8a8633 100%)}
+.hi{position:relative;z-index:2;max-width:1250px;margin:auto;padding:64px 24px 44px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:14px}
+h1{margin:0;font-size:clamp(34px,6vw,58px);font-weight:800;letter-spacing:-2px;line-height:1;text-shadow:0 6px 24px #0009}.hi p{margin:12px 0 0;opacity:.85;font-size:16px}
+#clk{background:#ffffff1f;backdrop-filter:blur(10px);border:1px solid #ffffff4d;color:#fff;padding:9px 18px;border-radius:999px;font-weight:700;font-variant-numeric:tabular-nums}
+#inst{background:linear-gradient(180deg,#f0c968,#d19d2c)!important;color:var(--ink)!important;box-shadow:0 3px 0 var(--gold2),0 8px 16px #0006!important}
+nav#roles{background:var(--ink);padding:10px 24px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;position:sticky;top:0;z-index:5}
+main{max-width:1250px;margin:auto;padding:26px 24px 52px}
+button{background:linear-gradient(180deg,#13a39e,var(--teal2));color:#fff;border:0;border-radius:12px;padding:11px 17px;font:700 14px Manrope,sans-serif;cursor:pointer;box-shadow:0 4px 0 #084c4a,0 10px 18px -4px #084c4a88,inset 0 1px 0 #ffffff55;transition:transform .12s,box-shadow .12s,filter .15s;position:relative;top:0}
+button:hover{filter:brightness(1.08);transform:translateY(-1px)}
+button:active{transform:translateY(3px);box-shadow:0 1px 0 #084c4a,0 3px 6px #084c4a66,inset 0 1px 0 #ffffff33}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+nav button{background:#ffffff18;box-shadow:none}
+.tabs{display:inline-flex;background:#dbe8ee;border-radius:999px;padding:5px;gap:3px;margin-bottom:20px;flex-wrap:wrap;box-shadow:inset 0 3px 6px #0a2a3d33}
+.tabs button{background:transparent;color:var(--ink2);box-shadow:none;border-radius:999px}
+.tabs button:hover{background:#ffffff88;transform:none}
+.tabs button.on{background:linear-gradient(180deg,#143b57,var(--ink));color:#fff;box-shadow:0 3px 0 var(--gold),0 8px 14px #071a2b55}
+.s{padding:5px 12px;font-size:12px;border-radius:999px;box-shadow:0 3px 0 #084c4a,0 6px 10px -3px #084c4a88,inset 0 1px 0 #ffffff55}
+.r{background:linear-gradient(180deg,#e5625a,#b8322b);box-shadow:0 4px 0 #7f1f1a,0 10px 18px -4px #7f1f1a88,inset 0 1px 0 #ffffff55}.s.r{box-shadow:0 3px 0 #7f1f1a,inset 0 1px 0 #ffffff55}
+.o{background:linear-gradient(180deg,#1ec48a,#0c8a5e);box-shadow:0 4px 0 #066042,0 10px 18px -4px #06604288,inset 0 1px 0 #ffffff55}.s.o{box-shadow:0 3px 0 #066042,inset 0 1px 0 #ffffff55}
+.w{background:linear-gradient(180deg,#fff,#dde8ee);color:var(--ink);box-shadow:0 4px 0 #b3c5d0,0 8px 14px -4px #0a2a3d44,inset 0 1px 0 #fff}.s.w{box-shadow:0 3px 0 #b3c5d0}
+.big{font-size:16px;padding:17px 22px;width:100%;margin:8px 0 10px;border-radius:14px}
+.card{background:linear-gradient(180deg,#fff,#f7fafc);border:1px solid #fff;border-radius:20px;padding:22px;margin-bottom:18px;box-shadow:0 1px 0 #fff inset,0 2px 4px #0a2a3d14,0 18px 36px -16px #0a2a3d55;transition:transform .25s,box-shadow .25s}
+.card:hover{transform:translateY(-3px);box-shadow:0 1px 0 #fff inset,0 4px 8px #0a2a3d1a,0 28px 44px -18px #0a2a3d66}
+.card h3{margin:0 0 14px;font-size:21px;font-weight:800;letter-spacing:-.5px}
+.g2,.g3{display:grid;gap:18px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1.3fr}
+@media(max-width:900px){.g2,.g3{grid-template-columns:1fr}.tiles{grid-template-columns:1fr 1fr}.tiles div:nth-child(3){display:none}}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:14px;margin-bottom:18px}
+.kpi{background:linear-gradient(150deg,#164563,var(--ink) 70%);color:#fff;border-radius:20px;padding:18px 18px 16px;border-bottom:4px solid var(--gold);box-shadow:inset 0 1px 0 #ffffff33,0 22px 30px -14px #071a2b99;transition:transform .2s ease-out;will-change:transform}
+.kpi b{display:block;font-size:30px;letter-spacing:-1px;text-shadow:0 3px 8px #0006}.kpi span{color:#9fbdd0;font-size:13px}
+.q{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.q b{background:linear-gradient(180deg,#f2cf79,#d0a038);color:var(--ink);min-width:30px;height:30px;border-radius:50%;display:grid;place-items:center;box-shadow:0 3px 0 var(--gold2),0 6px 10px #0004}.q span{flex:1}
+.tag{background:linear-gradient(180deg,#f2cf79,#d0a038);color:var(--ink);font:800 11px Manrope,sans-serif;padding:3px 10px;border-radius:999px;vertical-align:middle;letter-spacing:.5px;box-shadow:0 2px 0 var(--gold2)}
+.mut{color:var(--mut)}
+input,select{width:100%;padding:13px 14px;background:#eef4f7;border:1px solid transparent;border-radius:12px;margin:4px 0 10px;font:inherit;box-shadow:inset 0 3px 6px #0a2a3d1f,0 1px 0 #fff}
+input:focus,select:focus{background:#fff;border-color:var(--teal)}
+label{font-weight:700;font-size:12px;color:var(--mut)}
+table{width:100%;border-collapse:collapse}th{text-align:left;color:var(--mut);padding:8px;font-size:12px;font-weight:700;border-bottom:2px solid var(--ink)}td{padding:11px 8px;border-bottom:1px solid var(--line)}tr:hover td{background:#eef6f8}
+.tw{overflow-x:auto}#map{height:540px;border-radius:20px;border:4px solid #fff;box-shadow:0 24px 44px -18px #071a2b88}
+.pin{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;border:3px solid #fff;box-shadow:0 4px 10px #0007;font-size:15px;animation:pulse 2.2s infinite}
+@keyframes pulse{0%{box-shadow:0 4px 10px #0007,0 0 0 0 var(--pc,#0e8a8688)}100%{box-shadow:0 4px 10px #0007,0 0 0 16px #0000}}
+.crono{font:800 68px/1 Manrope,sans-serif;letter-spacing:-3px;font-variant-numeric:tabular-nums;margin:16px 0 4px;text-align:center;background:linear-gradient(180deg,#143b57,var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 8px #0e8a8644)}.center{text-align:center}
+.cover{position:relative;height:210px;border-radius:22px;background:#000 center/cover;margin-bottom:18px;overflow:hidden;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:24px;box-shadow:0 26px 40px -18px #071a2bcc;transition:transform .2s ease-out;will-change:transform}
+.cover:before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#04101cee,#04101c00 75%)}.cover *{position:relative;margin:0}.cover h2{font-size:30px;font-weight:800;letter-spacing:-1px}.cover p{opacity:.88;margin-top:4px}
+.st{padding:3px 11px;border-radius:999px;font-size:12px;font-weight:700;background:#e1edf2;white-space:nowrap}
+footer{background:var(--ink);color:#8fa9ba;text-align:center;padding:28px;border-top:3px solid var(--gold)}footer b{color:var(--gold)}
+@keyframes rise{from{opacity:0;transform:translateY(22px) rotateX(8deg)}to{opacity:1;transform:none}}
+body.intro main>*{animation:rise .8s cubic-bezier(.2,.7,.2,1) both}body.intro main>*:nth-child(2){animation-delay:.1s}body.intro main>*:nth-child(3){animation-delay:.2s}body.intro main>*:nth-child(4){animation-delay:.3s}
+#cw{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:50}
+#cw-b{width:64px;height:64px;border-radius:50%;font-size:27px;padding:0;position:relative;float:right}
+#cw-b i{position:absolute;top:-5px;right:-5px;background:var(--er);color:#fff;font:800 12px Manrope,sans-serif;border-radius:999px;min-width:22px;height:22px;display:none;place-items:center;padding:0 5px;box-shadow:0 2px 6px #0006}
+#cw-p{display:none;flex-direction:column;position:absolute;right:0;bottom:78px;width:min(390px,calc(100vw - 36px));height:min(540px,72vh);background:#fff;border-radius:22px;box-shadow:0 30px 60px -12px #071a2bcc;border:1px solid var(--line);overflow:hidden;padding:12px;gap:8px}
+.cwh{display:flex;justify-content:space-between;align-items:center}.cwt{display:flex;gap:6px;flex-wrap:wrap}#cw-p select{margin:0}
+#cwl{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:7px;padding:4px}
+.cwm{align-self:flex-start;max-width:84%;background:#eaf1f5;border-radius:14px 14px 14px 4px;padding:8px 11px;word-break:break-word}
+.cwm.me{align-self:flex-end;background:linear-gradient(180deg,#13a39e,var(--teal2));color:#fff;border-radius:14px 14px 4px 14px}
+.cwm small{display:block;opacity:.7;font-size:10px;margin-bottom:3px}
+.cws{align-self:center;font-size:12px;color:var(--mut);background:#f4ecd5;border-radius:999px;padding:3px 12px;text-align:center}
+.cwf{display:flex;gap:6px}.cwf input{margin:0;flex:1}.cwf button{padding:0 14px}
+@media(prefers-reduced-motion:reduce){*,*:before{animation:none!important;transition:none!important}}
+</style>
+<style id="premium">
+:root{--ink:#0a0c12;--ink2:#c9d1de;--teal:#ff6b1a;--teal2:#e0520a;--gold:#ffb020;--line:#262b39;--mut:#8b94a8;--er:#ff4d5e;--ok:#2ee59d}
+::selection{background:#ff6b1a;color:#fff}::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#303748;border-radius:10px}::-webkit-scrollbar-track{background:#0d1017}
+@keyframes flow{to{background-position:300% 0}}@keyframes aur{to{transform:translate3d(6%,-4%,0) rotate(8deg) scale(1.1)}}@keyframes cz{from{background-size:108%}to{background-size:128%}}
+@keyframes glow{0%,100%{box-shadow:0 8px 20px -6px #ff6b1aaa,0 0 0 0 #ff6b1a66}50%{box-shadow:0 8px 20px -6px #ff6b1aaa,0 0 0 14px #ff6b1a00}}@keyframes sosp{50%{box-shadow:0 0 0 12px #ff4d5e00,0 0 40px #ff4d5e88}}
+body{background:radial-gradient(900px 520px at 100% -10%,#2f1707 0,transparent 60%),radial-gradient(700px 500px at -10% 40%,#08283a 0,transparent 55%),#0a0c12 fixed;color:#e8ecf4}
+body:before{content:"";position:fixed;top:0;left:0;right:0;height:3px;z-index:60;background:linear-gradient(90deg,#ff6b1a,#ffb020,#2fd6ff,#ff6b1a);background-size:300% 100%;animation:flow 10s linear infinite}
+h1,.card h3,.cover h2,.kpi b{font-family:Sora,Manrope,sans-serif}
+.hero{background:#07080d;border-bottom:1px solid #262b39}.hero:before{background:linear-gradient(95deg,#07080d 8%,#07080dcc 40%,#07080d33 100%)}
+.hero:after{content:"";position:absolute;inset:-40%;z-index:1;pointer-events:none;mix-blend-mode:screen;background:radial-gradient(40% 40% at 25% 35%,#ff6b1a33,transparent 60%),radial-gradient(35% 35% at 80% 20%,#2fd6ff2e,transparent 60%),radial-gradient(40% 40% at 60% 95%,#ffb02026,transparent 60%);animation:aur 20s ease-in-out infinite alternate}
+.hi{position:relative;z-index:3;padding:58px 24px 50px;align-items:center}
+#moto3d{position:absolute;right:15%;top:0;height:100%;width:min(42%,500px);z-index:2;pointer-events:none}
+@media(max-width:800px){#moto3d{right:0;width:70%;opacity:.5}}
+.brand{display:flex;align-items:center;gap:16px}.logo{width:60px;height:60px;border-radius:17px;flex:none;box-shadow:0 0 30px #ff6b1a66,0 12px 26px -8px #000}
+h1{font-weight:800;font-size:clamp(28px,4.8vw,44px);line-height:1.05;letter-spacing:-1px;color:#fff;background:none;animation:none;filter:none;text-shadow:0 0 30px #ff6b1a55}
+.hi p{margin:6px 0 0;opacity:.75}#clk{background:#ffffff14;border:1px solid #ffffff2e}
+nav#roles{background:#07080d}
+button{background:linear-gradient(180deg,#ff7d33,#e0520a);color:#fff;border-radius:12px;box-shadow:0 1px 0 #ffffff55 inset,0 10px 22px -10px #ff6b1a;transition:transform .15s,box-shadow .15s,filter .15s}
+button:hover{transform:translateY(-1px);filter:brightness(1.08);box-shadow:0 1px 0 #ffffff55 inset,0 14px 26px -10px #ff6b1a}button:active{transform:translateY(1px) scale(.985)}
+button.s,button.s.r,button.s.o,button.s.w{box-shadow:0 1px 0 #ffffff33 inset,0 4px 10px -5px #000}
+.r{background:linear-gradient(180deg,#ff6676,#d92f43);box-shadow:0 1px 0 #ffffff55 inset,0 10px 22px -10px #ff4d5e}
+.o{background:linear-gradient(180deg,#2ee59d,#13b878);color:#04281a;box-shadow:0 1px 0 #ffffff55 inset,0 10px 22px -10px #2ee59d}
+.w{background:#1a1f2c;color:#e8ecf4;border:1px solid #2a3042;box-shadow:none}#inst{background:linear-gradient(180deg,#ffd27a,#ffb020)!important;color:#1b1203!important}nav button,#out{box-shadow:none}
+.tabs{background:#12151d;box-shadow:inset 0 1px 4px #000}.tabs button{background:transparent;color:#aab3c5;box-shadow:none}.tabs button:hover{background:#1a1f2c;transform:none}
+.tabs button.on{background:linear-gradient(135deg,#ff7d33,#e0520a);color:#fff;box-shadow:0 10px 22px -8px #ff6b1a}
+.card{background:linear-gradient(180deg,#151925,#10131b);border:1px solid #232938;color:#e8ecf4;border-radius:18px;box-shadow:0 24px 44px -24px #000,inset 0 1px 0 #ffffff0d;overflow:hidden}.card:before{display:none}
+.card:hover{transform:translateY(-2px);border-color:#ff6b1a66;box-shadow:0 26px 48px -24px #000,0 0 28px -10px #ff6b1a88}
+.card h3{background:none;color:#fff;-webkit-text-fill-color:currentColor;font-size:18px;font-weight:700}
+.mut,label{color:#8b94a8}.kpi{background:linear-gradient(160deg,#1c2232,#0f121a);color:#fff;border:0;border-top:3px solid #ff6b1a;border-radius:18px;box-shadow:0 20px 34px -18px #000,0 0 30px -14px #ff6b1a}
+.kpi:nth-child(5n+2){border-top-color:#2fd6ff}.kpi:nth-child(5n+3){border-top-color:#ffb020}.kpi:nth-child(5n+4){border-top-color:#2ee59d}.kpi:nth-child(5n+5){border-top-color:#c26bff}
+.kpi:after{display:none}.kpi span{color:#8b94a8}
+input,select{background:#0c0f16;border:1px solid #262c3b;color:#e8ecf4;box-shadow:none}input:focus,select:focus{border-color:#ff6b1a;box-shadow:0 0 0 4px #ff6b1a33}option{background:#12151d}
+th{color:#8b94a8;text-transform:uppercase;letter-spacing:.06em;font-size:11px;border-bottom:1px solid #2a3042}td{border-bottom:1px solid #1f2432}tr:hover td{background:#171b27}
+.st{background:#1a1f2c;border:1px solid #2a3042;color:#e8ecf4}.q{border-bottom:1px solid #1f2432}.q b,.tag{background:linear-gradient(135deg,#ffd27a,#ffb020);color:#1b1203;box-shadow:none}
+.cat{color:#fff;padding:3px 11px;border-radius:999px;font-size:12px;font-weight:800;white-space:nowrap;display:inline-block}
+.cover{animation:cz 24s ease-in-out infinite alternate;box-shadow:0 26px 44px -24px #000,0 0 40px -18px #ff6b1a}.cover:before{background:linear-gradient(0deg,#07080df2,#07080d44 60%,#ff6b1a1a)}
+.crono{background:none;color:#fff;-webkit-text-fill-color:currentColor;animation:none;filter:none;text-shadow:0 0 34px #ff6b1a99}
+#map{border:4px solid #1a1f2c;box-shadow:0 24px 44px -20px #000,0 0 34px -14px #ff6b1a}.leaflet-container{background:#0d1017}.leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.92) contrast(.92) saturate(.55)}
+.leaflet-tooltip{background:#12151d;color:#fff;border:1px solid #262b39}
+#cw-b{background:linear-gradient(135deg,#ff7d33,#e0520a);animation:glow 3s ease-in-out infinite}#cw-p{background:#12151d;border:1px solid #262b39}.cwm{background:#1b2030;color:#e8ecf4}.cwm.me{background:linear-gradient(135deg,#ff7d33,#e0520a);color:#fff}.cws{background:#2a2316;color:#ffcf8a}
+#hb{display:none;background:#33240a;color:#ffcf8a;text-align:center;padding:9px;font-weight:700;border-bottom:1px solid #5a4116}
+.sos{border:2px solid #ff4d5e;animation:sosp 1.1s infinite}.sos a{color:#ffb020}
+footer{background:#07080d;color:#6f788c;border-top:1px solid #262b39}footer b{color:#ff8a3d}footer:before{display:none}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style></head><body>
+<header class="hero" id="hero"><div class="tiles"></div><canvas id="moto3d"></canvas><div class="hi"><div class="brand"><svg class="logo" viewBox="0 0 48 48"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb020"/><stop offset="1" stop-color="#e0520a"/></linearGradient></defs><rect width="48" height="48" rx="13" fill="url(#lg)"/><text x="24" y="32" text-anchor="middle" font-family="Sora,Arial,sans-serif" font-weight="800" font-size="23" fill="#fff">33</text></svg><div><h1>Logística 33</h1><p id="sub">Control automatizado de flota · Pinamar y Ostende</p></div></div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button id="inst" style="display:none;background:#fff;color:#000;border-radius:999px" onclick="instalar()">⬇ Instalar app</button><button id="out" style="display:none;background:#ffffff22;color:#fff" onclick="salir()">Salir</button><div id="clk"></div></div></div></header>
+<nav id="roles"></nav><div id="hb">⚠ La central está fuera de línea: los viajes se asignan cuando vuelva a conectarse.</div>
+<main id="app"></main>
+<div id="cw"><button id="cw-b" onclick="cwTog()" style="display:none">💬<i id="cwn"></i></button><div id="cw-p"></div></div>
+<footer>© 2026 <b>Global System</b> — Marcelo Muraña</footer>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="config.js"></script><script src="mapa-config.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const ROL=/*ROL*/"pasajero"/*FIN*/;
+const IMG=["data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%271200%27%20height%3D%27400%27%20viewBox%3D%270%200%201200%20400%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%232a1306%27%2F%3E%3Cstop%20offset%3D%27.55%27%20stop-color%3D%27%230b0d14%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%230a2230%27%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%271200%27%20height%3D%27400%27%20fill%3D%27url%28%23g%29%27%2F%3E%3Cg%20stroke-linecap%3D%27round%27%20fill%3D%27none%27%3E%3Cpath%20d%3D%27M-50%20300%20L1250%2090%27%20stroke%3D%27%23ff6b1a%27%20stroke-width%3D%273%27%20opacity%3D%270.85%27%2F%3E%3Cpath%20d%3D%27M-50%20350%20L1250%20170%27%20stroke%3D%27%232fd6ff%27%20stroke-width%3D%272%27%20opacity%3D%270.5%27%2F%3E%3Cpath%20d%3D%27M-50%20260%20L1250%2040%27%20stroke%3D%27%23ffb020%27%20stroke-width%3D%272%27%20opacity%3D%270.5%27%2F%3E%3Cpath%20d%3D%27M200%20420%20L760%20-20%27%20stroke%3D%27%23ff6b1a%27%20stroke-width%3D%271.5%27%20opacity%3D%270.35%27%2F%3E%3Cpath%20d%3D%27M520%20420%20L1100%20-10%27%20stroke%3D%27%232fd6ff%27%20stroke-width%3D%271.5%27%20opacity%3D%270.3%27%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E","data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%271200%27%20height%3D%27400%27%20viewBox%3D%270%200%201200%20400%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%232a1306%27%2F%3E%3Cstop%20offset%3D%27.55%27%20stop-color%3D%27%230b0d14%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%230a2230%27%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%271200%27%20height%3D%27400%27%20fill%3D%27url%28%23g%29%27%2F%3E%3Cg%20stroke-linecap%3D%27round%27%20fill%3D%27none%27%3E%3Cpath%20d%3D%27M-50%20310%20L1250%20120%27%20stroke%3D%27%23ff6b1a%27%20stroke-width%3D%273%27%20opacity%3D%270.85%27%2F%3E%3Cpath%20d%3D%27M-50%20342%20L1250%20190%27%20stroke%3D%27%232fd6ff%27%20stroke-width%3D%272%27%20opacity%3D%270.5%27%2F%3E%3Cpath%20d%3D%27M-50%20280%20L1250%2080%27%20stroke%3D%27%23ffb020%27%20stroke-width%3D%272%27%20opacity%3D%270.5%27%2F%3E%3Cpath%20d%3D%27M200%20420%20L760%20-20%27%20stroke%3D%27%23ff6b1a%27%20stroke-width%3D%271.5%27%20opacity%3D%270.35%27%2F%3E%3Cpath%20d%3D%27M520%20420%20L1100%20-10%27%20stroke%3D%27%232fd6ff%27%20stroke-width%3D%271.5%27%20opacity%3D%270.3%27%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E","data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%271200%27%20height%3D%27400%27%20viewBox%3D%270%200%201200%20400%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%232a1306%27%2F%3E%3Cstop%20offset%3D%27.55%27%20stop-color%3D%27%230b0d14%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%230a2230%27%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%271200%27%20height%3D%27400%27%20fill%3D%27url%28%23g%29%27%2F%3E%3Cg%20stroke-linecap%3D%27round%27%20fill%3D%27none%27%3E%3Cpath%20d%3D%27M-50%20320%20L1250%20150%27%20stroke%3D%27%23ff6b1a%27%20stroke-width%3D%273%27%20opacity%3D%270.85%27%2F%3E%3Cpath%20d%3D%27M-50%20334%20L1250%20210%27%20stroke%3D%27%232fd6ff%27%20stroke-width%3D%272%27%20opacity%3D%270.5%27%2F%3E%3Cpath%20d%3D%27M-50%20300%20L1250%20120%27%20stroke%3D%27%23ffb020%27%20stroke-width%3D%272%27%20opacity%3D%270.5%27%2F%3E%3Cpath%20d%3D%27M200%20420%20L760%20-20%27%20stroke%3D%27%23ff6b1a%27%20stroke-width%3D%271.5%27%20opacity%3D%270.35%27%2F%3E%3Cpath%20d%3D%27M520%20420%20L1100%20-10%27%20stroke%3D%27%232fd6ff%27%20stroke-width%3D%271.5%27%20opacity%3D%270.3%27%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"];
+/* ===== CONFIGURACIÓN ===== */
+const CFG={clave:'1234',tarifa:3500,comision:20,
+ zonas:{Pinamar:[-37.1084,-56.8551],Ostende:[-37.1335,-56.8700]}};
+/* ===== DATOS ===== */
+const K='gsm_moto_v1',$=id=>document.getElementById(id),M=n=>'$'+Math.round(n||0).toLocaleString('es-AR');
+const hms=ms=>{let s=Math.floor(ms/1000);return[s/3600|0,(s/60|0)%60,s%60].map(n=>String(n).padStart(2,0)).join(':')};
+const fh=t=>new Date(t).toLocaleString('es-AR',{dateStyle:'short',timeStyle:'short'});
+function seed(){return{ch:[],pa:[],vi:[],cj:[],seq:100}}
+function load(){try{return JSON.parse(localStorage[K])}catch(e){return seed()}}
+const db=window.firebase&&window.FIREBASE_CONFIG&&/^https:/.test(FIREBASE_CONFIG.databaseURL||'')?(firebase.initializeApp(FIREBASE_CONFIG),firebase.database()):null;
+let S=db?seed():load(),ui={rol:ROL||'operador',tab:'despacho',ch:+localStorage.gsm_ch||0,gps:null,mfs:{}};
+/* ===== NUBE (Firebase) ===== */
+/* ----- chat privado con audios ----- */
+const tk=t=>String(t).replace(/\D/g,''),CHT={},chOff={},esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),hh=t=>new Date(t).toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+let CWO=0,CWC=null,CWS='',REC=null,PREV=0,CHB={};try{CHB=JSON.parse(localStorage.gsm_seen||'{}')}catch(e){}
+const myR=()=>ROL=='chofer'?'ch':ROL=='pasajero'?'pa':'op';
+const chPath=c=>{const i=c.indexOf('_');return 'chat/'+c.slice(0,i)+'/'+c.slice(i+1)};
+const chLoc=()=>{try{return JSON.parse(localStorage.gsm_chat||'{}')}catch(e){return{}}};
+const nuevos=c=>(CHT[c]||[]).filter(m=>m.de!=myR()&&m.de!='sys'&&m.ts>(CHB[c]||0)).length;
+function cwContacts(){
+ if(!ROL)return[...S.ch.map(c=>({canal:'oc_'+c.id,n:c.mv+' · '+c.n,g:'Conductores'})),...S.pa.filter(p=>p.uid).map(p=>({canal:'op_'+p.uid,n:p.n,g:'Pasajeros'}))];
+ if(ROL=='chofer'){const c=S.ch.find(x=>x.id==ui.ch);if(!c)return[];const v=S.vi.find(x=>x.ch==c.id&&x.est=='curso');return[{canal:'oc_'+c.id,n:'Central'}].concat(v?[{canal:'cp_'+v.id,n:'Pasajero · '+v.pn}]:[])}
+ const t=USR?USR.uid:tk(localStorage.gsm_tel||'');if(!t)return[];const v=S.vi.find(x=>x.ch&&x.est=='curso');return[{canal:'op_'+t,n:'Central'}].concat(v?[{canal:'cp_'+v.id,n:'Mi conductor'}]:[])}
+const cwTot=()=>cwContacts().reduce((a,x)=>a+nuevos(x.canal),0);
+function chListen(){if(!db){const L=chLoc();Object.keys(L).forEach(c=>CHT[c]=L[c]);return}
+ const add=(k,r)=>{if(chOff[k])return;const f=r.on('value',s=>{const v=s.val()||{};if(k=='oc'||k=='op')Object.keys(v).forEach(id=>CHT[k+'_'+id]=Object.values(v[id]||{}).sort((a,b)=>a.ts-b.ts));else CHT[k]=Object.values(v).sort((a,b)=>a.ts-b.ts);cwUpd(1)},()=>{});chOff[k]=()=>r.off('value',f)};
+ if(!ROL){add('oc',db.ref('chat/oc'));add('op',db.ref('chat/op'))}else cwContacts().forEach(x=>add(x.canal,db.ref(chPath(x.canal)).limitToLast(60)))}
+function chSetup(){chListen();cwBadge()}
+function cwBadge(){const b=$('cw-b');if(!b)return;const cs=cwContacts(),n=cwTot(),sg=cs.map(x=>x.canal).join();b.style.display=cs.length?'':'none';$('cwn').textContent=n;$('cwn').style.display=n?'grid':'none';if(CWO&&sg!=CWS){CWS=sg;cwDraw()}}
+function cwUpd(snd){cwBadge();const n=cwTot();if(snd&&n>PREV&&navigator.vibrate)navigator.vibrate(150);PREV=n;if(CWO&&CWC)cwList()}
+function cwTog(){CWO=!CWO;CWS=cwContacts().map(x=>x.canal).join();cwDraw()}
+function cwDraw(){const P=$('cw-p');if(!CWO){P.style.display='none';return}P.style.display='flex';const cs=cwContacts();if(!CWC||!cs.some(x=>x.canal==CWC))CWC=cs[0]?cs[0].canal:null;
+ const nv=x=>nuevos(x.canal)?' ('+nuevos(x.canal)+')':'';
+ P.innerHTML=`<div class="cwh"><b>💬 Mensajes</b><button class="s w" onclick="cwTog()">✕</button></div>`+(!ROL?`<select id="cws" onchange="CWC=this.value;cwDraw()">${['Conductores','Pasajeros'].map(g=>`<optgroup label="${g}">${cs.filter(x=>x.g==g).map(x=>`<option value="${x.canal}" ${x.canal==CWC?'selected':''}>${esc(x.n)}${nv(x)}</option>`).join('')}</optgroup>`).join('')}</select>`:`<div class="cwt">${cs.map(x=>`<button class="s ${x.canal==CWC?'':'w'}" onclick="CWC='${x.canal}';cwDraw()">${esc(x.n)}${nv(x)}</button>`).join('')}</div>`)+`<div id="cwl"></div><div class="cwf"><input id="cwi" placeholder="Escribí un mensaje…" onkeydown="if(event.key=='Enter')cwEnv()"><button onclick="cwEnv()">➤</button><button id="cwm" class="o" onclick="cwMic()">🎤</button></div>`;cwList()}
+function cwList(){const L=$('cwl');if(!L)return;const ms=CHT[CWC]||[],me=myR();
+ L.innerHTML=ms.map(m=>m.de=='sys'?`<div class="cws">${esc(m.t)}</div>`:`<div class="cwm ${m.de==me?'me':''}"><small>${esc(m.nm||'')} · ${hh(m.ts)}</small>${m.a?`<button class="s w" onclick="playA('${m.a}',this)">▶ Audio</button>`:''}${m.t?`<div>${esc(m.t)}</div>`:''}</div>`).join('')||'<p class="mut">Todavía no hay mensajes.</p>';
+ L.scrollTop=L.scrollHeight;const l=ms.length?ms[ms.length-1].ts:0;if(CWC&&l>(CHB[CWC]||0)){CHB[CWC]=l;try{localStorage.gsm_seen=JSON.stringify(CHB)}catch(e){}cwBadge()}}
+function cwEnv(){const i=$('cwi'),t=i.value.trim();if(!t||!CWC)return;chSend(CWC,t);i.value=''}
+function chSend(c,t,a,sys){const m={ts:Date.now(),de:sys?'sys':myR(),t:t||'',nm:sys?'':ROL=='chofer'?(S.ch.find(x=>x.id==ui.ch)||{}).n:ROL=='pasajero'?localStorage.gsm_n||'Pasajero':'Central'};
+ if(a){m.a=c+'_'+m.ts;putA(m.a,a)}
+ if(db)db.ref(chPath(c)).push(m);else{const L=chLoc();(L[c]=L[c]||[]).push(m);try{localStorage.gsm_chat=JSON.stringify(L)}catch(e){}CHT[c]=L[c];cwUpd()}}
+function putA(k,d){if(db)db.ref(audP(k)).set(d);else try{localStorage['gsm_a_'+k]=d}catch(e){alert('No hay espacio para guardar el audio.')}}
+function playA(k,b){const go=d=>{if(!d)return alert('El audio ya no está disponible.');b.textContent='🔊 Reproduciendo';const a=new Audio(d);a.onended=()=>b.textContent='▶ Audio';a.play().catch(()=>b.textContent='▶ Audio')};db?db.ref(audP(k)).once('value').then(s=>go(s.val())):go(localStorage['gsm_a_'+k])}
+async function cwMic(){const b=$('cwm');if(REC){REC.stop();return}
+ try{const st=await navigator.mediaDevices.getUserMedia({audio:true}),mt=['audio/webm;codecs=opus','audio/mp4','audio/webm'].find(t=>window.MediaRecorder&&MediaRecorder.isTypeSupported(t))||'',r=new MediaRecorder(st,mt?{mimeType:mt,audioBitsPerSecond:24000}:{}),ch=[],c=CWC;REC=r;
+  const tm=setTimeout(()=>r.state=='recording'&&r.stop(),30000);r.ondataavailable=e=>ch.push(e.data);
+  r.onstop=()=>{clearTimeout(tm);st.getTracks().forEach(t=>t.stop());REC=null;const bb=$('cwm');if(bb){bb.textContent='🎤';bb.className='o'}const fr=new FileReader();fr.onload=()=>chSend(c,'',fr.result);fr.readAsDataURL(new Blob(ch,{type:r.mimeType||mt||'audio/webm'}))};
+  r.start();b.textContent='⏹ Enviar';b.className='r'}catch(e){alert('No se pudo usar el micrófono. Revisá el permiso del navegador (necesita conexión segura https).')}}
+function limpiarChats(){Object.keys(CHT).forEach(k=>delete CHT[k]);if(db){db.ref('chat').remove();db.ref('aud').remove()}else localStorage.removeItem('gsm_chat')}
+function fase(id,f){const v=S.vi.find(x=>x.id==id);v.fase=f;save();chSend('cp_'+id,f=='camino'?'🏍️ Tu moto va en camino.':'📍 Tu moto llegó y te está esperando.',null,1);R()}
+function pausa(id){const c=S.ch.find(x=>x.id==id);if(c.est=='viaje')return alert('Finalizá el viaje en curso antes de pausar.');if(c.pa){c.pa=0;c.ini=Date.now();c.est='libre'}else if(c.ini){c.acum+=Date.now()-c.ini;c.ini=null;c.pa=1;c.est='pausa';c.cola=null}save();R()}
+/* ----- tarifas ----- */
+function C0(){return{tar:[{n:'Dentro de Pinamar (ejemplo)',p:3500},{n:'Pinamar ↔ Ostende (ejemplo)',p:4500},{n:'Pinamar ↔ Cariló (ejemplo)',p:6000}],com:20,zt:{Pinamar:3500,Ostende:4500},cat:{fr:3,pr:10,vip:25},blq:{can:3,imp:1}}}
+S.cfg=S.cfg||C0();S.cfg.zt=S.cfg.zt||C0().zt;S.cfg.cat=S.cfg.cat||C0().cat;S.cfg.blq=S.cfg.blq||C0().blq;let CFGD=0,SIG='';
+function saveCfg(){CFGD=1;save();R()}
+function editTar(i,k,v){S.cfg.tar[i][k]=k=='p'?+v||0:v;CFGD=1;save()}
+function addTar(){const n=$('tn').value.trim(),p=+$('tpz').value;if(!n||!(p>=0)||$('tpz').value==='')return alert('Complete la descripción y el precio.');S.cfg.tar.push({n,p});saveCfg()}
+function delTar(i){if(confirm('¿Eliminar esta tarifa?')){S.cfg.tar.splice(i,1);saveCfg()}}
+function setCom(v){S.cfg.com=Math.max(0,Math.min(100,+v||0));CFGD=1;save()}
+const CATC={Nuevo:'#64748b',Frecuente:'#0e8f9a',Premium:'#7c3aed',VIP:'#d99a0b'};let BLQ=null,OVR=0;
+const catDe=n=>{const c=S.cfg.cat;return n>=c.vip?'VIP':n>=c.pr?'Premium':n>=c.fr?'Frecuente':'Nuevo'};
+const catBadge=c=>`<span class="cat" style="background:${CATC[c]}">${c=='VIP'?'👑 ':c=='Premium'?'💎 ':c=='Frecuente'?'⭐ ':''}${c}</span>`;
+function setCat(k,v){S.cfg.cat[k]=Math.max(1,+v||1);CFGD=1;save()}
+function setBlq(k,v){S.cfg.blq[k]=Math.max(0,+v||0);CFGD=1;save()}
+function bloq(id){const p=S.pa.find(x=>x.id==id),m=prompt('Motivo del bloqueo:','Falta de pago');if(m===null)return;p.bq=1;p.bm=m||'Bloqueado por la central';p.bt=Date.now();save();R()}
+function desbloq(id){const p=S.pa.find(x=>x.id==id);if(!confirm('¿Desbloquear a '+p.n+'? Se reinician sus cancelaciones, impagos y deuda.'))return;p.bq=0;p.bm='';p.nc=0;p.ni=0;p.deuda=0;save();R()}
+function liberar(v,rz){const c=S.ch.find(x=>x.id==v.ch);if(c){c.est='libre';c.cola=rz||v.z;c.qts=Date.now()}v.lib=1}
+function noShow(id){if(!confirm('¿Confirmás que el pasajero no se presentó? Se registra como cancelación del pasajero.'))return;const v=S.vi.find(x=>x.id==id);v.est='canc';v.cpor='pa';v.ns=1;liberar(v,$('rz')?$('rz').value:0);asignar(v.z);save();R()}
+function impago(id){if(!confirm('¿Confirmás que el pasajero NO pagó el viaje? Se registra como deuda.'))return;const v=S.vi.find(x=>x.id==id);v.est='impago';liberar(v,$('rz')?$('rz').value:0);asignar(v.z);save();R()}
+function cancelarPa(id){if(!confirm('¿Cancelar el viaje? Las cancelaciones reiteradas pueden bloquear tu cuenta.'))return;const v=S.vi.find(x=>x.id==id);if(!v||v.est=='fin')return;v.est='canc';v.cpor='pa';save();R()}
+function bnr(){if(!BLQ)return'';return BLQ.b?`<div class="card" style="border:2px solid var(--er)"><h3>🚫 Cuenta bloqueada</h3><p>Motivo: ${esc(BLQ.b)}. Comunicate con la central para regularizar tu situación.</p></div>`:`<div class="card"><h3>Tu categoría</h3><p>${catBadge(BLQ.c)} <span class="mut">${BLQ.n} viajes completados</span></p></div>`}
+function pedir(){const t=tk($('ft').value);OVR=0;
+ if(!ROL){const p=S.pa.find(x=>tk(x.tel)==t);if(p&&p.bq){if(!confirm('⚠ Pasajero BLOQUEADO ('+(p.bm||'sin motivo')+'). ¿Cargar el viaje igual?'))return;OVR=1}return pedir1()}
+ if(ROL=='pasajero'&&t){if(db)return db.ref('pinfo/'+(USR?USR.uid:t)).once('value').then(s=>{const i=s.val();if(i&&i.b){BLQ=i;R();alert('Tu cuenta está bloqueada ('+i.b+'). Comunicate con la central.')}else pedir1()}).catch(()=>pedir1());const p=S.pa.find(x=>tk(x.tel)==t);if(p&&p.bq){alert('Tu cuenta está bloqueada ('+(p.bm||'')+'). Comunicate con la central.');return}}
+ pedir1()}
+let USR=null,AUTHR=!db,FAILED=0;const auth=db?firebase.auth():null,VI={},VW={};let SEC=null;
+const AERR=e=>({'auth/invalid-credential':'Datos incorrectos.','auth/wrong-password':'Datos incorrectos.','auth/user-not-found':'Datos incorrectos.','auth/invalid-email':'Email inválido.','auth/email-already-in-use':'Ese email ya tiene cuenta.','auth/weak-password':'La clave debe tener al menos 6 caracteres.','auth/too-many-requests':'Demasiados intentos. Esperá unos minutos.','auth/network-request-failed':'Sin conexión.','auth/popup-closed-by-user':'Ingreso cancelado.','auth/unauthorized-domain':'Dominio no autorizado en Firebase (ver LEEME).'}[e.code]||'Error ('+(e.code||e.message)+')');
+const audP=k=>{const i=k.lastIndexOf('_');return chPath(k.slice(0,i)).replace('chat/','aud/')+'/'+k.slice(i+1)};
+function salir(){if(auth)auth.signOut()}
+function authFail(){if(FAILED)return;FAILED=1;alert('Esta cuenta no tiene permiso para este programa.');auth.signOut()}
+function vAuth(){const r=ROL||'operador';return`<div class="cover" style="background-image:url(${IMG[r=='chofer'?2:r=='pasajero'?1:0]})"><h2>${{operador:'Central del operador',chofer:'Ingreso de conductores',pasajero:'Ingresá a tu cuenta'}[r]}</h2><p>Acceso protegido</p></div><div class="card" style="max-width:440px">`+(r=='chofer'?`<label>Número de moto</label><input id="au1" inputmode="numeric"><label>PIN</label><input id="au2" type="password" inputmode="numeric" onkeydown="if(event.key=='Enter')entrar()">`:`<label>Email</label><input id="au1" type="email" autocomplete="username"><label>Contraseña</label><input id="au2" type="password" autocomplete="current-password" onkeydown="if(event.key=='Enter')entrar()">`)+`<button class="big" onclick="entrar()">Ingresar</button>`+(r=='pasajero'?`<button class="big w" onclick="registrar()">Crear cuenta nueva</button><button class="big w" onclick="entrarG()">Continuar con Google</button>`:'')+`</div>`}
+async function entrar(){const a=$('au1').value.trim(),b=$('au2').value;if(!a||!b)return alert('Completá los datos.');try{let em=a;if(ROL=='chofer'){const s=await db.ref('login/'+norm(a)).once('value');em=s.val();if(!em)return alert('Moto o PIN incorrectos.')}await auth.signInWithEmailAndPassword(em,b)}catch(e){alert(AERR(e))}}
+async function registrar(){const a=$('au1').value.trim(),b=$('au2').value;if(!a||!b)return alert('Completá email y contraseña.');try{await auth.createUserWithEmailAndPassword(a,b)}catch(e){alert(AERR(e))}}
+async function entrarG(){try{await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())}catch(e){alert(AERR(e))}}
+function watchVi(id){if(VW[id])return;const r=db.ref('vi/'+id),f=r.on('value',s=>{const v=s.val();if(v)VI[id]=v;else delete VI[id];S.vi=Object.values(VI).sort((a,b)=>a.id-b.id);snap('vi');GOT.vi=1;refresh()},()=>{});VW[id]=1;off.push(()=>{r.off('value',f);delete VW[id]})}
+function moto3d(){const cv=$('moto3d');if(!cv||!window.THREE)return;try{
+ const T=THREE,sc=new T.Scene(),cam=new T.PerspectiveCamera(32,1,.1,100);cam.position.set(0,.9,6.6);cam.lookAt(0,.1,0);
+ const rd=new T.WebGLRenderer({canvas:cv,alpha:true,antialias:true});rd.setPixelRatio(Math.min(devicePixelRatio||1,2));
+ const mat=(c,e,m,r)=>new T.MeshStandardMaterial({color:c,emissive:e,metalness:m,roughness:r});
+ const dark=mat(0x171a23,0,.85,.35),ember=mat(0xff6b1a,0x5a1d00,.55,.35),chrome=mat(0xcfd6e2,0,1,.12),lamp=new T.MeshBasicMaterial({color:0xfff1d0});
+ const bike=new T.Group(),add=(m,x,y,z,s)=>{m.position.set(x,y,z);if(s)m.scale.set(s[0],s[1],s[2]);bike.add(m);return m},cyl=(r,l,m)=>new T.Mesh(new T.CylinderGeometry(r,r,l,12),m),wheels=[];
+ const wheel=x=>{const w=new T.Group();w.add(new T.Mesh(new T.TorusGeometry(.8,.22,18,56),dark));w.add(new T.Mesh(new T.TorusGeometry(.6,.045,8,48),ember));for(let i=0;i<5;i++){const s=cyl(.03,1.2,chrome);s.rotation.z=i*Math.PI/5;w.add(s)}const h=cyl(.13,.34,chrome);h.rotation.x=Math.PI/2;w.add(h);w.position.set(x,0,0);bike.add(w);wheels.push(w)};
+ wheel(-1.6);wheel(1.6);
+ [-.17,.17].forEach(z=>{const f=cyl(.045,1.25,chrome);f.rotation.z=.55;add(f,1.275,.52,z)});
+ add(cyl(.06,2.2,dark),0,.55,0).rotation.z=Math.PI/2;
+ add(new T.Mesh(new T.SphereGeometry(.5,24,16),ember),.35,.95,0,[1.5,.7,.85]);
+ add(new T.Mesh(new T.BoxGeometry(1.35,.2,.55),dark),-.7,.82,0);
+ add(new T.Mesh(new T.BoxGeometry(.7,.12,.5),ember),-1.55,.95,0).rotation.z=.18;
+ add(new T.Mesh(new T.BoxGeometry(.85,.6,.55),dark),.1,.15,0);
+ for(let i=0;i<4;i++)add(new T.Mesh(new T.BoxGeometry(.7,.04,.62),ember),.1,i*.12-.05,0);
+ const ex=cyl(.07,1.9,chrome);ex.rotation.z=Math.PI/2+.06;add(ex,-.7,-.12,.33);
+ add(cyl(.035,.95,chrome),.9,1.22,0).rotation.x=Math.PI/2;
+ add(new T.Mesh(new T.SphereGeometry(.2,16,12),lamp),1.15,.98,0);
+ const lp=new T.PointLight(0xffb070,1.4,6);lp.position.set(2.2,1,0);bike.add(lp);bike.position.y=.1;sc.add(bike);
+ const rm=new T.MeshBasicMaterial({color:0xff6b1a,side:T.DoubleSide,transparent:true,opacity:.7}),ring=new T.Mesh(new T.RingGeometry(2.4,2.5,64),rm),ring2=new T.Mesh(new T.RingGeometry(3,3.04,64),rm.clone());
+ [ring,ring2].forEach(r=>{r.rotation.x=-Math.PI/2;r.position.y=-1.03;sc.add(r)});ring2.material.opacity=.3;
+ sc.add(new T.AmbientLight(0x8899bb,.6));const dl=new T.DirectionalLight(0xffffff,1.1);dl.position.set(3,5,4);sc.add(dl);const rl=new T.DirectionalLight(0xff6b1a,1.3);rl.position.set(-4,2,-3);sc.add(rl);
+ let px=0,py=0,t=0;addEventListener('pointermove',e=>{px=e.clientX/innerWidth-.5;py=e.clientY/innerHeight-.5});
+ const still=matchMedia('(prefers-reduced-motion:reduce)').matches,fit=()=>{const w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)return;rd.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()};fit();addEventListener('resize',fit);
+ (function loop(){requestAnimationFrame(loop);if(document.hidden)return;t+=.016;bike.rotation.y=still?.6:-.55+Math.sin(t*.4)*.35+px*.6;bike.rotation.x=py*.08;bike.position.y=.1+Math.sin(t*1.6)*.04;if(!still)wheels.forEach(w=>w.rotation.z-=.06);ring.rotation.z+=.004;ring2.rotation.z-=.003;rd.render(sc,cam)})();
+}catch(e){}}
+const eta=(a,b,c,d)=>{const r=x=>x*Math.PI/180,h=Math.sin(r(c-a)/2)**2+Math.cos(r(a))*Math.cos(r(c))*Math.sin(r(d-b)/2)**2,km=12742*Math.asin(Math.sqrt(h));return km.toFixed(1)+' km · ~'+Math.max(1,Math.round(km/22*60))+' min'};
+function sos(id){if(!confirm('¿Enviar una ALERTA SOS a la central?'))return;const v=S.vi.find(x=>x.id==id);v.sos=Date.now();v.sosde=ROL||'central';save();chSend('cp_'+id,'🆘 Alerta SOS enviada a la central.',null,1);R()}
+function sosOk(id){const v=S.vi.find(x=>x.id==id);v.sosok=1;save();R()}
+function zonaSel(){const z=$('fz').value,p=S.cfg.zt[z]||0;if($('fm'))$('fm').value=p;if($('tp'))$('tp').textContent=M(p)}
+function setZt(z,v){S.cfg.zt[z]=Math.max(0,+v||0);CFGD=1;save()}
+let HB=0,OFF=0;function hbUpd(){const e=$('hb');if(e)e.style.display=(ROL&&db&&USR&&Date.now()+OFF-HB>60000)?'block':'none'}setInterval(hbUpd,5000);
+if(!ROL)setInterval(()=>{if(!db||USR){despachar();if(db)db.ref('hb').set(firebase.database.ServerValue.TIMESTAMP)}},8000);
+function tarSel(){const t=S.cfg.tar[$('ftar').value];if(!t)return;if($('fm'))$('fm').value=t.p;if($('tp'))$('tp').textContent=M(t.p)}
+function tTar(){return`<div class="card"><h3>Tarifa por zona</h3><p class="mut">La tarifa se asigna sola según la zona de salida del pasajero. Al finalizar el viaje, la central o el conductor pueden modificar el importe final.</p><div class="g2"><div><label>Zona Pinamar ($)</label><input type="number" value="${S.cfg.zt.Pinamar}" onchange="setZt('Pinamar',this.value)"></div><div><label>Zona Ostende ($)</label><input type="number" value="${S.cfg.zt.Ostende}" onchange="setZt('Ostende',this.value)"></div></div></div><div class="card"><h3>Comisión de la base</h3><label>Porcentaje que retiene la base en la tirilla del conductor (%)</label><input type="number" value="${S.cfg.com}" onchange="setCom(this.value)"></div><div class="card"><h3>Categorías y bloqueo de pasajeros</h3><p class="mut">Los pasajeros suben de categoría según los viajes completados. Los que cancelan o no pagan se bloquean solos (0 = no bloquear).</p><div class="g3"><div><label>⭐ Frecuente desde (viajes)</label><input type="number" min="1" value="${S.cfg.cat.fr}" onchange="setCat('fr',this.value)"></div><div><label>💎 Premium desde</label><input type="number" min="1" value="${S.cfg.cat.pr}" onchange="setCat('pr',this.value)"></div><div><label>👑 VIP desde</label><input type="number" min="1" value="${S.cfg.cat.vip}" onchange="setCat('vip',this.value)"></div></div><div class="g2"><div><label>Bloquear al llegar a … cancelaciones del pasajero</label><input type="number" min="0" value="${S.cfg.blq.can}" onchange="setBlq('can',this.value)"></div><div><label>Bloquear al llegar a … viajes impagos</label><input type="number" min="0" value="${S.cfg.blq.imp}" onchange="setBlq('imp',this.value)"></div></div></div>`}
+let GOT={},LAST={},off=[];
+const KEY={ch:x=>x.id,pa:x=>'t'+String(x.tel).replace(/\D/g,''),vi:x=>x.id,cj:x=>x.ts+'_'+x.vid};
+const uid=()=>((Date.now()/1000|0)%100000000)*10+(Math.random()*10|0);
+const NEED=()=>!ROL?['ch','pa','vi','cj','seq']:ROL=='chofer'?(ui.ch?['ch','vi']:['ch']):['pax'];
+const READY=()=>!db||NEED().every(n=>GOT[n]);
+function snap(n){if(n=='seq'){LAST.seq=S.seq;return}LAST[n]={};S[n].forEach(x=>LAST[n][KEY[n](x)]=JSON.stringify(x))}
+function save(){if(!db){try{localStorage[K]=JSON.stringify(S)}catch(e){}return}
+ const u={},del=READY();
+ ['ch','pa','vi','cj'].forEach(n=>{const o=LAST[n]||{},cur={};S[n].forEach(x=>{const k=KEY[n](x),s=JSON.stringify(x);cur[k]=1;if(o[k]!==s){const nw=JSON.parse(s),ol=o[k]?JSON.parse(o[k]):null,sj=v=>JSON.stringify(v==null?null:v);if(!ol)u[n+'/'+k]=nw;else{for(const f in nw)if(sj(nw[f])!==sj(ol[f]))u[n+'/'+k+'/'+f]=nw[f];for(const f in ol)if(!(f in nw))u[n+'/'+k+'/'+f]=null}o[k]=s}});if(del)for(const k in o)if(!cur[k]){u[n+'/'+k]=null;delete o[k]}LAST[n]=o});
+ if(!ROL&&LAST.seq!==S.seq){u.seq=S.seq;LAST.seq=S.seq}
+ if(!ROL&&del){const m={};S.pa.forEach(p=>{const k=p.uid;if(k)m[k]={c:catDe(p.nv||0),n:p.nv||0,b:p.bq?(p.bm||'Bloqueado'):0}});const s=JSON.stringify(m);if(LAST.pinfo!==s){LAST.pinfo=s;u.pinfo=m}}
+ if(!ROL&&CFGD){u.cfg=JSON.parse(JSON.stringify(S.cfg));CFGD=0}
+ if(Object.keys(u).length)db.ref().update(u)}
+function sync(){off.forEach(f=>f());off=[];GOT={};if(!db||!USR)return;
+ const L=(n,r,fatal)=>{const f=r.on('value',s=>{const v=s.val();S[n]=n=='seq'?(v||100):Object.values(v||{}).sort((a,b)=>(a.id||a.ts)-(b.id||b.ts));snap(n);GOT[n]=1;despachar();refresh()},fatal?authFail:()=>{});off.push(()=>r.off('value',f))};
+ const Wt=(r,cb)=>{const f=r.on('value',cb,()=>{});off.push(()=>r.off('value',f))};
+ Wt(db.ref('cfg'),s=>{const v=s.val();S.cfg=v?{tar:Array.isArray(v.tar)?v.tar:Object.values(v.tar||{}),com:v.com==null?20:v.com,zt:v.zt||C0().zt,cat:v.cat||C0().cat,blq:v.blq||C0().blq}:C0();refresh()});
+ if(ROL){Wt(db.ref('hb'),s=>{HB=s.val()||0;hbUpd()});db.ref('.info/serverTimeOffset').once('value').then(s=>{OFF=s.val()||0})}
+ if(!ROL){L('ch',db.ref('ch'),1);L('pa',db.ref('pa'));L('vi',db.ref('vi'));L('cj',db.ref('cj'));L('seq',db.ref('seq'))}
+ else if(ROL=='chofer'){L('ch',db.ref('ch'),1);if(ui.ch)L('vi',db.ref('vi').orderByChild('ch').equalTo(ui.ch))}
+ else{const q=db.ref('pax/'+USR.uid+'/trips'),g=q.on('value',s=>{Object.keys(s.val()||{}).sort().slice(-12).forEach(watchVi);GOT.pax=1;refresh()},authFail);off.push(()=>q.off('value',g));Wt(db.ref('pinfo/'+USR.uid),s=>{BLQ=s.val();refresh()})}}
+function despachar(){if(ROL||!READY())return;S.vi.forEach(v=>{if(v.tel&&!S.pa.some(p=>KEY.pa(p)==KEY.pa(v)))S.pa.push({id:uid(),n:v.pn,tel:v.tel,dir:v.or,uid:v.uid,nv:0,alta:Date.now()});const p=S.pa.find(x=>KEY.pa(x)==KEY.pa(v));if(p&&v.uid&&p.uid!==v.uid)p.uid=v.uid;if(p&&!v.cnt){const f=v.est=='fin'?'nv':v.est=='canc'&&v.cpor=='pa'?'nc':v.est=='impago'?'ni':'';if(f){v.cnt=1;p[f]=(p[f]||0)+1;if(f=='ni')p.deuda=(p.deuda||0)+(v.monto||0);const b=S.cfg.blq;if(!p.bq){if(b.can&&(p.nc||0)>=b.can){p.bq=1;p.bm='Cancelaciones reiteradas ('+p.nc+')';p.bt=Date.now()}else if(b.imp&&(p.ni||0)>=b.imp){p.bq=1;p.bm='Viajes impagos ('+p.ni+')';p.bt=Date.now()}}}}
+ if(v.est=='pend'&&p&&p.bq&&!v.ovr){v.est='canc';v.cpor='bq'}
+ if(v.est=='canc'&&v.ch&&!v.lib){const c=S.ch.find(x=>x.id==v.ch);if(c&&c.est=='viaje'&&!S.vi.some(x=>x!==v&&x.ch==c.id&&x.est=='curso')){c.est='libre';c.cola=v.z;c.qts=Date.now()}v.lib=1}});['Ostende','Pinamar'].forEach(asignar);save()}
+
+const worked=c=>c.acum+(c.ini?Date.now()-c.ini:0);
+const cola=z=>S.ch.filter(c=>c.cola===z&&c.est==='libre').sort((a,b)=>a.qts-b.qts);
+const nom=id=>(S.ch.find(c=>c.id==id)||{n:'—'}).n;
+const ESTV={pend:'⏳ Pendiente',curso:'🏍️ En curso',fin:'✅ Finalizado',canc:'✖ Cancelado',impago:'💸 No pagó'};
+/* ===== LÓGICA ===== */
+function asignar(z){if(ROL)return;S.vi.filter(v=>v.est=='pend'&&v.z==z).forEach(v=>{const o=z=='Pinamar'?'Ostende':'Pinamar',c=cola(z)[0]||(Date.now()-v.ts>60000?cola(o)[0]:null);if(c){v.ch=c.id;v.dn=c.n;v.dm=c.mv;v.dp=c.pat;v.est='curso';c.est='viaje';c.cola=null;chSend('cp_'+v.id,'✅ Moto '+c.mv+' · '+c.n+' ('+c.pat+') asignado a tu viaje.',null,1)}})}
+function jornada(id){const c=S.ch.find(x=>x.id==id);if(c.est=='viaje')return alert('Finalice el viaje en curso antes de cerrar la jornada.');
+ if(c.ini||c.pa){if(c.ini)c.acum+=Date.now()-c.ini;c.pa=0;c.ini=null;c.est='off';c.cola=null;if(W[id]!=null){navigator.geolocation.clearWatch(W[id]);delete W[id]}c.lat=null;c.gps=0}else{c.ini=Date.now();c.est='libre'}save();R()}
+function entrarCola(id,z){const c=S.ch.find(x=>x.id==id);if(!c.ini)return alert(c.pa?'Estás en pausa. Tocá Reanudar.':'Primero inicie la jornada.');c.cola=z;c.est='libre';c.qts=Date.now();asignar(z);save();R()}
+function salirCola(id){S.ch.find(x=>x.id==id).cola=null;save();R()}
+function pedir1(){if(!ui.gps&&ui.rol=='pasajero'&&navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{ui.gps=[p.coords.latitude,p.coords.longitude];pedir2()},()=>pedir2(),{timeout:7000});else pedir2()}
+function pedir2(){const v=k=>$(k).value.trim();if(!v('fn')||!v('ft')||!v('fd'))return alert('Complete nombre, teléfono y dirección de retiro.');
+ const z=v('fz'),pos=ui.gps;ui.gps=null;
+ const NV={id:uid(),ts:Date.now(),uid:USR?USR.uid:null,pn:v('fn'),tel:v('ft'),or:v('fd'),de:v('fx'),z,monto:$('fm')?+$('fm').value||0:S.cfg.zt[z]||0,est:'pend',ch:null,ovr:OVR?1:0,casco:$('fc')&&$('fc').checked?1:0,lat:pos?pos[0]:null,lng:pos?pos[1]:null};S.vi.push(NV);VI[NV.id]=NV;
+ if(ROL){localStorage.gsm_tel=v('ft');localStorage.gsm_n=v('fn')}asignar(z);despachar();save();if(ROL=='pasajero'&&db)db.ref('pax/'+USR.uid+'/trips/'+NV.id).set(1);R()}
+function fin(id,met){const v=S.vi.find(x=>x.id==id),c=S.ch.find(x=>x.id==v.ch),rz=$('rz')?$('rz').value:v.z;const raw=ui.mfs[id];if(raw!==undefined&&raw!==''&&+raw>=0&&+raw!==v.monto){v.m0=v.m0==null?v.monto:v.m0;v.monto=+raw;v.ajus=1}delete ui.mfs[id];
+ v.est='fin';v.met=met;S.cj.push({ts:Date.now(),vid:v.id,pn:v.pn,ch:c.id,met,monto:v.monto});c.tot+=v.monto;c.vj++;c.est='libre';c.cola=rz;c.qts=Date.now();
+ asignar(rz);despachar();save();R()}
+function canc(id){const v=S.vi.find(x=>x.id==id),c=S.ch.find(x=>x.id==v.ch);v.cpor='op';if(c){c.est='libre';c.cola=v.z;c.qts=Date.now()}v.est='canc';asignar(v.z);save();R()}
+async function altaCh(){const n=$('an').value.trim(),v=$('am').value.trim(),pin=($('apin')||{}).value||'',mv=/^\d+$/.test(v)?'Moto '+v:v;
+ if(!n||!v)return alert('Complete nombre y número de moto.');if(S.ch.some(x=>norm(x.mv)==norm(mv)))return alert('Ese número de moto ya está registrado.');
+ const base={n,mv,pat:$('ap').value,est:'off',ini:null,acum:0,cola:null,qts:0,vj:0,tot:0,lat:null,lng:null};
+ if(!db){S.ch.push({id:++S.seq,...base});save();R();return}
+ if(!/^\d{6,}$/.test(pin))return alert('El PIN debe tener al menos 6 números (se recomiendan 8).');
+ try{const id=++S.seq,em='m'+id+'.'+Math.random().toString(36).slice(2,9)+'@choferes.remis.app';SEC=SEC||firebase.initializeApp(firebase.app().options,'sec');const a2=SEC.auth(),cr=await a2.createUserWithEmailAndPassword(em,pin);await a2.signOut();
+  await db.ref().update({['drivers/'+cr.user.uid]:String(id),['login/'+norm(mv)]:em});S.ch.push({id,...base,uid:cr.user.uid});save();R()}catch(e){alert('No se pudo crear el conductor: '+AERR(e))}}
+function altaPa(){const n=$('pn').value.trim();if(!n||!$('pt').value.trim())return alert('Complete nombre y teléfono.');S.pa.push({id:uid(),n,tel:$('pt').value,dir:$('pd').value,nv:0,alta:Date.now()});save();R()}
+function bajaPa(id){if(confirm('¿Eliminar pasajero?')){S.pa=S.pa.filter(p=>p.id!=id);save();R()}}
+function cierre(){imp(`<h3>CIERRE DE CAJA</h3><p>${fh(Date.now())}</p><hr>`+S.cj.map(x=>`<div class=r><span>#${x.vid} ${x.met}</span><span>${M(x.monto)}</span></div>`).join('')+`<hr><div class=r><b>TOTAL</b><b>${M(S.cj.reduce((a,x)=>a+x.monto,0))}</b></div><p>Viajes: ${S.cj.length}</p><p>Global System · Marcelo Muraña</p>`);
+ if(S.cj.length&&confirm('¿Cerrar la caja y reiniciar el día?')){limpiarChats();S.cj=[];S.vi=S.vi.filter(v=>v.est=='pend'||v.est=='curso');S.ch.forEach(c=>{c.tot=0;c.vj=0;c.acum=0;if(c.ini)c.ini=Date.now()});save();R()}}
+/* ===== IMPRESIÓN ===== */
+function imp(h){const f=document.createElement('iframe');f.style.cssText='position:fixed;width:0;height:0;border:0';document.body.appendChild(f);const d=f.contentWindow.document;d.open();
+ d.write('<html><head><style>body{font:12px monospace;width:72mm;margin:0 auto}h3,p{text-align:center;margin:3px}.r{display:flex;justify-content:space-between}hr{border:0;border-top:1px dashed #000}</style></head><body>'+h+'</body></html>');d.close();
+ setTimeout(()=>{f.contentWindow.focus();f.contentWindow.print();setTimeout(()=>f.remove(),3000)},300)}
+function ticket(id){const v=S.vi.find(x=>x.id==id),c=S.ch.find(x=>x.id==v.ch)||{n:v.dn||'—',mv:v.dm||'',pat:v.dp||''};
+ imp(`<h3>LOGÍSTICA 33</h3><p>Ticket de viaje Nº ${v.id}</p><hr><div class=r><span>Fecha</span><span>${fh(v.ts)}</span></div><div class=r><span>Pasajero</span><span>${v.pn}</span></div><div class=r><span>Desde</span><span>${v.or}</span></div><div class=r><span>Hasta</span><span>${v.de||'-'}</span></div><div class=r><span>Zona</span><span>${v.z}</span></div><div class=r><span>Conductor</span><span>${c.n}</span></div><div class=r><span>Moto</span><span>${c.mv} ${c.pat}</span></div><hr><div class=r><b>TOTAL</b><b>${M(v.monto)}</b></div><p>Pago: ${v.met||'a abonar'}</p><hr><p>¡Gracias por viajar con nosotros!</p><p>Global System · Marcelo Muraña</p>`)}
+function tirilla(id){const c=S.ch.find(x=>x.id==id),vs=S.vi.filter(v=>v.ch==id&&v.est=='fin'),com=c.tot*S.cfg.com/100;
+ imp(`<h3>LIQUIDACIÓN CHOFER</h3><p>${fh(Date.now())}</p><hr><div class=r><span>Conductor</span><span>${c.n}</span></div><div class=r><span>Moto</span><span>${c.mv} ${c.pat}</span></div><div class=r><span>Horas trabajadas</span><span>${hms(worked(c))}</span></div><hr>`+vs.map(v=>`<div class=r><span>#${v.id} ${v.z}</span><span>${M(v.monto)}</span></div>`).join('')+`<hr><div class=r><span>Viajes</span><span>${c.vj}</span></div><div class=r><span>Recaudado</span><span>${M(c.tot)}</span></div><div class=r><span>Comisión base ${S.cfg.com}%</span><span>${M(com)}</span></div><div class=r><b>Neto conductor</b><b>${M(c.tot-com)}</b></div><br><p>Firma: ________________</p><p>Global System · Marcelo Muraña</p>`)}
+/* ===== VISTAS ===== */
+function R(){const lg=db&&!USR;$('cw').style.display=lg?'none':'';$('out').style.display=lg||!db?'none':'';if(lg){$('app').innerHTML=AUTHR?vAuth():'<p class="mut" style="padding:30px">Cargando…</p>';return}
+ $('app').innerHTML=({operador:vOp,chofer:vCh,pasajero:vPa})[ui.rol]();
+ $('roles').style.display='none';
+ if(ui.rol=='chofer'){const c=S.ch.find(x=>x.id==ui.ch);if(c&&c.ini&&W[c.id]==null)gps(c.id,1)}
+ if($('map'))iniMapa()}
+const TABS=['despacho','mapa','caja','pasajeros','choferes','tarifas'];
+function vOp(){return`<div class="tabs">${TABS.map(t=>`<button class="${t==ui.tab?'on':''}" onclick="ui.tab='${t}';R();anim()">${{despacho:'Despacho',mapa:'Mapa',caja:'Caja',pasajeros:'Base de pasajeros',choferes:'Flota y conductores',tarifas:'Tarifas'}[t]}</button>`).join('')}</div>`+({despacho:tDesp,mapa:()=>'<div id="map"></div><p class="mut">🟢 Moto libre · 🟠 Moto en viaje · 🔵 Pasajero esperando</p>',caja:tCaja,pasajeros:tPas,choferes:tCho,tarifas:tTar})[ui.tab]()}
+function formViaje(op){return`<div class="card"><h3>${op?'Nuevo viaje':'Pedir una moto'}</h3><label>Nombre</label><input id="fn" value="${ROL&&localStorage.gsm_n||''}"><label>Teléfono</label><input id="ft" value="${ROL&&localStorage.gsm_tel||''}"><label>Dirección de retiro</label><input id="fd"><label>Destino</label><input id="fx"><label style="display:flex;gap:8px;align-items:center;margin:2px 0 12px"><input id="fc" type="checkbox" style="width:auto;margin:0"> Llevo mi propio casco</label><label>Zona de salida</label><select id="fz" onchange="zonaSel()"><option>Pinamar</option><option>Ostende</option></select>${op?`<label>Tarifa ($)</label><input id="fm" type="number" value="${S.cfg.zt.Pinamar}">`:`<p class="mut">Tarifa de la zona: <b id="tp">${M(S.cfg.zt.Pinamar)}</b>. Si hay cambios, se ajusta al finalizar el viaje.</p><p class="mut">📍 Al solicitar, el navegador te pedirá compartir tu ubicación para que la moto te encuentre.</p>`}<button class="big" onclick="pedir()">Solicitar moto</button></div>`}
+function filaV(v,acc){const c=S.ch.find(x=>x.id==v.ch);return`<tr><td>#${v.id}</td><td>${fh(v.ts)}</td><td>${v.pn}</td><td>${v.or} → ${v.de||'-'}</td><td>${v.z}</td><td>${c?c.mv+' · '+c.n:'—'}</td><td><span class="st">${ESTV[v.est]}</span></td><td>${M(v.monto)}${v.ajus?`<br><small class="mut">orig. ${M(v.m0)}</small>`:''}</td><td>${acc(v)}</td></tr>`}
+function tDesp(){const q=z=>`<div class="card"><h3>Cola ${z} <span class="tag">FIFO</span></h3>${cola(z).map((c,i)=>`<div class="q"><b>${i+1}</b><span>${c.mv} · ${c.n}</span><button class="s r" onclick="salirCola(${c.id})">✕</button></div>`).join('')||'<p class="mut">Sin motos en cola. Los conductores se ubican desde su panel.</p>'}</div>`;
+ const act=S.ch.filter(c=>c.est!='off').length,caja=S.cj.reduce((a,x)=>a+x.monto,0);
+ return`<div class="cover" style="background-image:url(${IMG[0]})"><h2>Central de despacho</h2><p>${act} motos activas · ${S.vi.filter(v=>v.est=='pend').length} pedidos esperando</p></div>${S.vi.filter(v=>v.sos&&!v.sosok).map(v=>`<div class="card sos"><h3>🆘 ALERTA SOS</h3><p><b>${esc(v.pn)}</b> · ${esc(v.tel||'')} · Moto ${esc(v.dm||'-')} (${esc(v.dn||'-')}) · enviada por ${v.sosde=='pasajero'?'el pasajero':v.sosde=='chofer'?'el conductor':'la central'}</p>${v.lat?`<p><a href="https://www.google.com/maps?q=${v.lat},${v.lng}" target="_blank" rel="noopener">📍 Ver ubicación del pasajero</a></p>`:''}<button class="o" onclick="sosOk(${v.id})">Marcar como atendida</button></div>`).join('')}<div class="kpis"><div class="kpi"><b>${act}</b><span>Motos activas</span></div><div class="kpi"><b>${cola('Ostende').length}</b><span>En cola Ostende</span></div><div class="kpi"><b>${cola('Pinamar').length}</b><span>En cola Pinamar</span></div><div class="kpi"><b>${S.vi.filter(v=>v.est=='pend').length}</b><span>Pedidos sin moto</span></div><div class="kpi"><b>${M(caja)}</b><span>Caja del día</span></div></div>
+ <div class="g3">${q('Ostende')}${q('Pinamar')}${formViaje(1)}</div><div class="card"><h3>Viajes</h3><div class="tw"><table><tr><th>Nº</th><th>Hora</th><th>Pasajero</th><th>Recorrido</th><th>Zona</th><th>Moto</th><th>Estado</th><th>Monto</th><th></th></tr>${S.vi.slice().reverse().slice(0,30).map(v=>filaV(v,v=>(v.est=='curso'?`<input id="mf${v.id}" type="number" style="width:96px;margin:0 6px 0 0;padding:6px 8px" value="${ui.mfs[v.id]!==undefined?ui.mfs[v.id]:v.monto}" oninput="ui.mfs[${v.id}]=this.value"><button class="s o" onclick="fin(${v.id},'Efectivo')">Cobrar efectivo</button> <button class="s" onclick="fin(${v.id},'Tarjeta/MP')">Tarjeta/MP</button> <button class="s r" onclick="impago(${v.id})">No pagó</button> `:'')+(v.est=='pend'||v.est=='curso'?`<button class="s r" onclick="canc(${v.id})">Cancelar</button> `:'')+(v.est!='canc'?`<button class="s w" onclick="ticket(${v.id})">🖨 Ticket</button>`:''))).join('')||'<tr><td colspan=9 class="mut">Todavía no hay viajes cargados.</td></tr>'}</table></div></div>`}
+function tCaja(){const t=m=>S.cj.filter(x=>!m||x.met==m).reduce((a,x)=>a+x.monto,0);
+ return`<div class="kpis"><div class="kpi"><b>${M(t())}</b><span>Total recaudado</span></div><div class="kpi"><b>${M(t('Efectivo'))}</b><span>Efectivo</span></div><div class="kpi"><b>${M(t('Tarjeta/MP'))}</b><span>Tarjeta / Mercado Pago</span></div><div class="kpi"><b>${S.cj.length}</b><span>Viajes cobrados</span></div></div><div class="card"><h3>Movimientos de caja</h3><div class="tw"><table><tr><th>Hora</th><th>Viaje</th><th>Pasajero</th><th>Conductor</th><th>Medio</th><th>Monto</th></tr>${S.cj.slice().reverse().map(x=>`<tr><td>${fh(x.ts)}</td><td>#${x.vid}</td><td>${x.pn}</td><td>${nom(x.ch)}</td><td>${x.met}</td><td>${M(x.monto)}</td></tr>`).join('')||'<tr><td colspan=6 class="mut">Sin movimientos. Los cobros aparecen al finalizar cada viaje.</td></tr>'}</table></div><br><button onclick="cierre()">🖨 Imprimir cierre y cerrar caja</button></div>`}
+function tPas(){const n=c=>S.pa.filter(p=>!p.bq&&catDe(p.nv||0)==c).length;return`<div class="kpis">${['Nuevo','Frecuente','Premium','VIP'].map(c=>`<div class="kpi"><b>${n(c)}</b><span>${c}</span></div>`).join('')}<div class="kpi"><b>${S.pa.filter(p=>p.bq).length}</b><span>🚫 Bloqueados</span></div></div><div class="card"><h3>Base de datos de pasajeros</h3><input placeholder="Buscar por nombre, teléfono, categoría (VIP…) o 'bloqueado'…" oninput="const q=this.value.toLowerCase();document.querySelectorAll('#tp tr.d').forEach(r=>r.style.display=r.textContent.toLowerCase().includes(q)?'':'none')"><div class="tw"><table id="tp"><tr><th>Nombre</th><th>Teléfono</th><th>Dirección</th><th>Categoría</th><th>Viajes</th><th>Cancel.</th><th>Impagos</th><th>Deuda</th><th>Estado</th><th></th></tr>${S.pa.map(p=>`<tr class="d"><td>${p.n}</td><td>${p.tel}</td><td>${p.dir||''}</td><td>${catBadge(catDe(p.nv||0))}</td><td>${p.nv||0}</td><td>${p.nc||0}</td><td>${p.ni||0}</td><td>${M(p.deuda)}</td><td>${p.bq?`<span class="cat" style="background:#c8302b">🚫 Bloqueado</span><br><small>${esc(p.bm||'')}</small>`:'<span class="mut">Activo</span>'}</td><td>${p.bq?`<button class="s o" onclick="desbloq(${p.id})">Desbloquear</button>`:`<button class="s r" onclick="bloq(${p.id})">Bloquear</button>`} <button class="s w" onclick="bajaPa(${p.id})">Eliminar</button></td></tr>`).join('')}</table></div></div><div class="card"><h3>Agregar pasajero</h3><div class="g3"><div><input id="pn" placeholder="Nombre"></div><div><input id="pt" placeholder="Teléfono"></div><div><input id="pd" placeholder="Dirección"></div></div><button onclick="altaPa()">Guardar pasajero</button></div>`}
+function tCho(){return`<div class="card"><h3>Conductores y motos</h3><div class="tw"><table><tr><th>Moto</th><th>Conductor</th><th>Patente</th><th>Estado</th><th>Horas</th><th>Viajes</th><th>Recaudado</th><th></th></tr>${S.ch.map(c=>`<tr><td>${c.mv}</td><td>${c.n}</td><td>${c.pat}</td><td><span class="st">${c.est=='off'?'Fuera de turno':c.est=='pausa'?'⏸ En pausa':c.est=='viaje'?'🏍️ En viaje':c.cola?'En cola '+c.cola+' · Nº'+(cola(c.cola).findIndex(x=>x.id==c.id)+1):'Libre'}</span></td><td data-c="${c.id}"><b>${hms(worked(c))}</b></td><td>${c.vj}</td><td>${M(c.tot)}</td><td><button class="s ${c.ini||c.pa?'r':'o'}" onclick="jornada(${c.id})">${c.ini||c.pa?'⏹ Fin':'▶ Inicio'}</button> <button class="s" onclick="entrarCola(${c.id},'Ostende')">→ Ostende</button> <button class="s" onclick="entrarCola(${c.id},'Pinamar')">→ Pinamar</button> <button class="s w" onclick="tirilla(${c.id})">🧾 Tirilla</button> <button class="s r" onclick="bajaCh(${c.id})">Baja</button></td></tr>`).join('')||'<tr><td colspan=8 class="mut">Todavía no hay conductores. Cárguelos abajo en Alta de conductor.</td></tr>'}</table></div></div><div class="card"><h3>Alta de conductor</h3><div class="g3"><div><input id="an" placeholder="Nombre y apellido"></div><div><input id="am" placeholder="Nº de moto (ej. 12)"></div><div><input id="ap" placeholder="Patente y modelo (ej. AB123CD · Honda 150)"></div><div><input id="apin" placeholder="PIN de ingreso (6+ números)" inputmode="numeric"></div></div><button onclick="altaCh()">Agregar conductor</button></div>`}
+const norm=s=>String(s).toLowerCase().replace(/m[óo]vil|moto|n[°º]|\s/g,'');
+function vLogin(){return`<div class="cover" style="background-image:url(${IMG[2]})"><h2>Ingreso de conductores</h2><p>Usá tu número de moto.</p></div><div class="card" style="max-width:420px"><label>Número de moto</label><input id="lm" inputmode="numeric" onkeydown="if(event.key=='Enter')loginCh()"><button class="big" onclick="loginCh()">Ingresar</button></div>`}
+function loginCh(){if(!READY())return alert('Conectando con la central… probá de nuevo en unos segundos.');if(!db)S=load();const m=norm($('lm').value),c=m&&S.ch.find(x=>norm(x.mv)==m);if(!c)return alert('Ese número de moto no está registrado. Consultá con la central.');ui.ch=c.id;localStorage.gsm_ch=c.id;sync();R()}
+function salirCh(){if(db)return salir();ui.ch=0;localStorage.removeItem('gsm_ch');R()}
+function bajaCh(id){const c=S.ch.find(x=>x.id==id);if(c.est=='viaje')return alert('El conductor tiene un viaje en curso.');if(confirm('¿Dar de baja a '+c.n+'? Ya no podrá ingresar.')){if(db&&c.uid){db.ref('drivers/'+c.uid).remove();db.ref('login/'+norm(c.mv)).remove()}S.ch=S.ch.filter(x=>x.id!=id);save();R()}}
+function vCh(){const c=S.ch.find(x=>x.id==ui.ch);if(!c)return db?'<p class="mut" style="padding:30px">Cargando…</p>':vLogin();const v=S.vi.find(x=>x.ch==c.id&&x.est=='curso'),pos=c.cola?cola(c.cola).findIndex(x=>x.id==c.id)+1:0;
+ return`<div class="cover" style="background-image:url(${IMG[2]})"><h2>${c.n}</h2><p>${c.mv} · ${c.pat}</p></div><div class="g2"><div class="card center"><h3>Tu jornada</h3><button class="s w" onclick="salirCh()">Cerrar sesión</button>
+ <div class="crono" data-c="${c.id}">${hms(worked(c))}</div><p class="mut">Horas trabajadas en el turno</p>
+ ${c.ini||c.pa?`<button class="big o" onclick="pausa(${c.id})">${c.pa?'▶ Reanudar':'⏸ Pausa'}</button>`:''}${c.pa?'<p class="mut">⏸ En pausa: el cronómetro está detenido.</p>':''}<button class="big ${c.ini||c.pa?'r':'o'}" onclick="jornada(${c.id})">${c.ini||c.pa?'⏹ Terminar jornada':'▶ Iniciar jornada'}</button>
+ ${c.ini&&!v?`<p><b>Ubicarme en la cola:</b></p><button class="big" onclick="entrarCola(${c.id},'Ostende')">Cola Ostende</button><button class="big" onclick="entrarCola(${c.id},'Pinamar')">Cola Pinamar</button>${c.cola?`<p>Estás en <b>${c.cola}</b>, posición <b>${pos}</b></p><button class="s r" onclick="salirCola(${c.id})">Salir de la cola</button>`:''}`:''}
+ <p><span class="mut">📍 Ubicación: ${c.gps?"compartida con la central":"se activa al iniciar la jornada"}</span> <button class="s" onclick="tirilla(${c.id})">🧾 Imprimir tirilla</button></p></div>
+ <div class="card"><h3>Viaje asignado</h3>${v?`<p><b>${v.pn}</b> · ${v.tel}</p><p>Retiro: <b>${v.or}</b></p>${c.lat&&v.lat?`<p class="mut">🧭 ${eta(c.lat,c.lng,v.lat,v.lng)} hasta el pasajero</p>`:''}<p>🪖 ${v.casco?'El pasajero lleva casco propio':'Llevar casco para el pasajero'}</p><p>Destino: <b>${v.de||'a confirmar'}</b></p><label>Importe final ($) · modificalo si hubo cambios</label><input id="mf${v.id}" type="number" value="${ui.mfs[v.id]!==undefined?ui.mfs[v.id]:v.monto}" oninput="ui.mfs[${v.id}]=this.value">${!v.fase?`<button class="big" onclick="fase(${v.id},'camino')">🏍️ Voy en camino</button>`:v.fase=='camino'?`<button class="big" onclick="fase(${v.id},'llego')">📍 Llegué al punto</button>`:''}${v.lat?`<a class="big w" style="display:block;text-align:center;text-decoration:none;padding:15px;border-radius:14px;font-weight:700;color:#071a2b" href="https://www.google.com/maps/dir/?api=1&destination=${v.lat},${v.lng}" target="_blank" rel="noopener">🧭 Cómo llegar al pasajero</a>`:''}<label>Al terminar volver a la cola de:</label><select id="rz"><option ${v.z=='Pinamar'?'selected':''}>Pinamar</option><option ${v.z=='Ostende'?'selected':''}>Ostende</option></select><button class="big o" onclick="fin(${v.id},'Efectivo')">Cobrado en efectivo</button><button class="big" onclick="fin(${v.id},'Tarjeta/MP')">Cobrado con tarjeta / MP</button><button class="big r" onclick="impago(${v.id})">💸 El pasajero no pagó</button><button class="big w" onclick="noShow(${v.id})">🚫 El pasajero no se presentó</button><button class="big r" onclick="sos(${v.id})">🆘 Emergencia (SOS)</button>`:'<p class="mut">Sin viaje asignado. Cuando te toque en la cola, el pedido aparece acá automáticamente.</p>'}
+ <hr><p>Viajes hoy: <b>${c.vj}</b> · Recaudado: <b>${M(c.tot)}</b></p></div></div><div class="card"><h3>Mapa</h3><div id="map" style="height:340px"></div><p class="mut">🟢 Vos · 🟡 Pasajero. Si no te ves, activá la ubicación del celular.</p></div>`}
+function vPa(){const t=localStorage.gsm_tel,mis=S.vi.filter(v=>v.tel==t).reverse();
+ return`<div class="cover" style="background-image:url(${IMG[1]})"><h2>¿A dónde vamos?</h2><p>Tu moto en Pinamar y Ostende, en minutos.</p></div>${bnr()}<div class="g2">${formViaje(0)}<div class="card"><h3>Mis viajes</h3>${mis.map(v=>{const c=S.ch.find(x=>x.id==v.ch);return`<div class="q"><span><b>#${v.id}</b> ${ESTV[v.est]}${v.fase=='camino'?' · 🏍️ En camino':v.fase=='llego'?' · 📍 Llegó':''}<br>${v.or} → ${v.de||'-'}<br>${v.dm?'Moto '+v.dm+' · '+v.dn+' · '+v.dp+(v.dlat&&v.lat&&v.est=='curso'?'<br>🧭 '+eta(v.dlat,v.dlng,v.lat,v.lng):''):'Buscando moto…'}</span><button class="s w" onclick="ticket(${v.id})">🖨 Ticket</button>${v.est=='curso'?`<button class="s r" onclick="sos(${v.id})">🆘 SOS</button>`:''}${v.est=='pend'||v.est=='curso'?`<button class="s r" onclick="cancelarPa(${v.id})">Cancelar</button>`:''}</div>`}).join('')||'<p class="mut">Cuando pidas tu primera moto, vas a ver acá el estado y tu ticket.</p>'}</div></div><div class="card"><h3>Seguí tu moto</h3><div id="map" style="height:340px"></div><p class="mut">🟢 Tu moto · 🟡 Tu ubicación. El mapa se activa cuando una moto acepta tu viaje.</p></div>`}
+/* ===== MAPA ===== */
+let map,mk={},fitK='';
+function iniMapa(){if(!window.L)return $('map').innerHTML='<p style="padding:20px">El mapa necesita conexión a internet.</p>';
+ if(map){map.remove();map=null}mk={};map=L.map('map').setView(CFG.zonas.Pinamar,14);
+ fitK='';{const k=window.MAP_CFG&&MAP_CFG.cartoKey;if(k)L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key='+k,{attribution:'© OpenStreetMap · © CARTO',maxZoom:19}).addTo(map);else L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(map)}
+ Object.entries(CFG.zonas).forEach(([z,p])=>L.circle(p,{radius:900,color:'#ff6b1a',weight:1.5,fillOpacity:.08}).addTo(map).bindTooltip('Zona '+z,{permanent:true,direction:'center'}));pintar()}
+function pintar(){if(!map)return;const vivos={};
+ const MIS=S.vi.filter(v=>(v.est=='pend'||v.est=='curso')&&v.lat);
+ S.ch.filter(c=>c.est!='off'&&c.lat&&(!ROL||(ROL=='chofer'&&c.id==ui.ch)||(ROL=='pasajero'&&MIS.some(v=>v.ch==c.id)))).forEach(c=>vivos['c'+c.id]=[c.lat,c.lng,c.est=='viaje'?'#ff6b1a':'#2ee59d','🏍️',c.mv+' · '+c.n+(c.cola?' · '+c.cola+' Nº'+(cola(c.cola).findIndex(x=>x.id==c.id)+1):'')]);
+ if(ROL=='pasajero')MIS.filter(v=>v.dlat).forEach(v=>vivos['c'+v.ch]=[v.dlat,v.dlng,'#ff6b1a','🏍️',(v.dm||'')+' · '+(v.dn||'')]);
+ MIS.forEach(v=>vivos['p'+v.id]=[v.lat,v.lng,'#2fd6ff','🧍',v.pn+' · '+v.or]);
+ Object.keys(mk).forEach(k=>{if(!vivos[k]){map.removeLayer(mk[k]);delete mk[k]}});
+ Object.entries(vivos).forEach(([k,d])=>{if(mk[k]){mk[k].setLatLng([d[0],d[1]]);mk[k].setTooltipContent(d[4])}else mk[k]=L.marker([d[0],d[1]],{icon:L.divIcon({className:'',iconSize:[30,30],html:`<div class="pin" style="background:${d[2]};--pc:${d[2]}99">${d[3]}</div>`})}).addTo(map).bindTooltip(d[4])});
+ if(ROL){const ks=Object.keys(vivos).sort().join();if(ks!=fitK){fitK=ks;const pts=Object.values(vivos).map(d=>[d[0],d[1]]);if(pts.length)map.fitBounds(pts,{padding:[50,50],maxZoom:16})}}}
+const W={};function gps(id,q){if(!navigator.geolocation){if(!q)alert('Su dispositivo no permite ubicación.');return}W[id]=navigator.geolocation.watchPosition(p=>{const c=S.ch.find(x=>x.id==id);if(!c)return;c.lat=p.coords.latitude;c.lng=p.coords.longitude;c.gps=1;const tr=S.vi.find(x=>x.ch==c.id&&x.est=='curso');if(tr){tr.dlat=c.lat;tr.dlng=c.lng}save()},()=>{delete W[id];if(!q)alert('No se pudo obtener la ubicación. Revise los permisos del navegador.')})}
+function miPos(){navigator.geolocation?navigator.geolocation.getCurrentPosition(p=>{ui.gps=[p.coords.latitude,p.coords.longitude];alert('Ubicación capturada ✔')},()=>alert('No se pudo obtener la ubicación.')):alert('Su dispositivo no permite ubicación.')}
+/* ===== RELOJES Y SINCRONIZACIÓN ===== */
+setInterval(()=>{document.querySelectorAll('[data-c]').forEach(e=>{const c=S.ch.find(x=>x.id==e.dataset.c);if(c)e.firstElementChild&&e.tagName=='TD'?e.firstElementChild.textContent=hms(worked(c)):e.textContent=hms(worked(c))});$('clk').textContent=new Date().toLocaleString('es-AR')},1000);
+if(!db)addEventListener('storage',e=>{if(e.key=='gsm_chat'){chListen();cwUpd();return}if(e.key!=K)return;S=load();despachar();refresh()});
+function anim(){document.body.classList.add('intro');setTimeout(()=>document.body.classList.remove('intro'),1100)}
+function refresh(){chSetup();if(!ROL)document.title=S.vi.some(v=>v.sos&&!v.sosok)?'🆘 ALERTA SOS':'Logística 33 · Central';const g=JSON.stringify(S,(k,v)=>k=='lat'||k=='lng'||k=='gps'||k=='dlat'||k=='dlng'?undefined:v),same=g==SIG;SIG=g;if($('map')&&(!ROL||same))return pintar();if(/INPUT|SELECT/.test(document.activeElement.tagName))return pintar();R()}
+if(ROL)$('sub').remove();
+
+let DI;const inst=$('inst');
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();DI=e;inst.style.display=''});
+addEventListener('appinstalled',()=>inst.style.display='none');
+function instalar(){if(DI){DI.prompt();DI=null;inst.style.display='none'}else alert('En iPhone o iPad: tocá Compartir y elegí "Agregar a pantalla de inicio". En Android: menú ⋮ y "Instalar app".')}
+if(/iphone|ipad|ipod/i.test(navigator.userAgent)&&!navigator.standalone)inst.style.display='';
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
+document.body.classList.add('intro');setTimeout(()=>document.body.classList.remove('intro'),1500);
+if(matchMedia('(hover:hover)').matches&&!matchMedia('(prefers-reduced-motion:reduce)').matches)document.addEventListener('pointermove',e=>{
+ const t=e.target.closest&&e.target.closest('.kpi,.cover');document.querySelectorAll('.tilt').forEach(x=>{if(x!==t){x.style.transform='';x.classList.remove('tilt')}});
+ if(t){const r=t.getBoundingClientRect(),px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;t.classList.add('tilt');t.style.transform=`perspective(800px) rotateY(${px*12}deg) rotateX(${-py*12}deg) translateZ(8px)`}
+ const h=$('hero');h.style.setProperty('--mx',(e.clientX/innerWidth-.5).toFixed(3));h.style.setProperty('--my',(e.clientY/innerHeight-.5).toFixed(3))});
+if(db){auth.onAuthStateChanged(async u=>{USR=u;FAILED=0;AUTHR=1;off.forEach(f=>f());off=[];GOT={};Object.keys(VI).forEach(k=>delete VI[k]);Object.keys(chOff).forEach(k=>{chOff[k]();delete chOff[k]});Object.keys(CHT).forEach(k=>delete CHT[k]);CWC=null;S=seed();S.cfg=C0();LAST={};if(!u)ui.ch=0;
+ if(u&&ROL=='chofer'){try{const s=await db.ref('drivers/'+u.uid).once('value');if(!s.val()){alert('Tu moto no está habilitada. Consultá con la central.');return auth.signOut()}ui.ch=+s.val()}catch(e){alert('No se pudo verificar tu cuenta.');return auth.signOut()}}
+ if(u&&ROL=='pasajero'&&!localStorage.gsm_n&&u.displayName)localStorage.gsm_n=u.displayName;
+ sync();R();chSetup()})}else{sync();R();chSetup()}
+moto3d();
+</script></body></html>

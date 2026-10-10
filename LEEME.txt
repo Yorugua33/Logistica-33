@@ -1,0 +1,70 @@
+LOGÍSTICA 33 - PUESTA EN MARCHA (con ingreso protegido)
+
+CONTENIDO
+ index.html -> app del PASAJERO (es la direccion principal)
+ operador.html -> central      conductor.html -> app de los conductores
+ config.js -> datos de Firebase (se completa UNA vez)   reglas-firebase.json -> reglas de seguridad
+ mapa-config.js, vercel.json, sw.js, manifest-*.json, icon-*.png -> no se tocan
+
+PASO 1 - Firebase (gratis)
+ 1. https://console.firebase.google.com > Crear proyecto.
+ 2. Compilacion > Realtime Database > Crear base de datos (modo bloqueado).
+ 3. Compilacion > Authentication > Comenzar > Metodo de acceso: activar "Correo electronico/contrasena"
+    y "Google" (Google es opcional, para los pasajeros).
+ 4. Authentication > Configuracion > Dominios autorizados > Agregar dominio: su direccion de Vercel
+    (tu-proyecto.vercel.app, sin https://). Necesario para el ingreso con Google.
+ 5. Authentication > Usuarios > Agregar usuario: el email y la clave de la CENTRAL (guardelos bien).
+ 6. Realtime Database > Datos: agregue un nodo llamado admin con un hijo llamado email cuyo valor sea
+    el email de la central, en minusculas (el del paso 5). Asi las reglas saben quien es el operador.
+ 7. Realtime Database > Reglas: borre todo, pegue el contenido de reglas-firebase.json y Publicar.
+ 8. Configuracion del proyecto > Tus apps > </> web > copiar firebaseConfig y pegarlo en config.js
+    (apiKey, authDomain, databaseURL, projectId, appId). NO lo reemplace al actualizar.
+ 9. Recomendado: en https://console.cloud.google.com > APIs y servicios > Credenciales > su clave de API
+    de navegador > Restricciones de sitios web: agregar https://tu-proyecto.vercel.app/*
+
+PASO 2 - Publicar en Vercel
+ Suba los archivos SUELTOS al proyecto (GitHub: subir y hacer commit). Direcciones:
+   https://TU-PROYECTO.vercel.app/            (pasajeros)
+   https://TU-PROYECTO.vercel.app/operador    (central)
+   https://TU-PROYECTO.vercel.app/conductor      (conductores)
+ Si antes subio pasajero.html, borrelo del repositorio: ahora el pasajero es index.html.
+
+PASO 3 - Como ingresa cada uno
+ - Central: email y clave del paso 5.
+ - Conductores: la central los da de alta en "Flota y conductores" con nombre, movil, patente y un PIN
+   (6 o mas numeros; se recomiendan 8). El chofer entra con su numero de movil y ese PIN.
+   Si olvida el PIN: dar de baja y de alta de nuevo con otro PIN. La baja le quita el acceso.
+ - Pasajeros: crean su cuenta con email y clave, o con Google.
+
+QUE PROTEGEN LAS REGLAS
+ - Sin ingreso no se lee ni se escribe nada (salvo la lista movil->acceso, que no tiene datos personales).
+ - Cada pasajero ve solo sus viajes, su categoria y sus chats; no ve a otros pasajeros.
+ - Cada chofer escribe solo su ficha y sus viajes; los chats son solo entre los participantes.
+ - Solo la central ve y modifica la base de pasajeros, la caja, los bloqueos y las tarifas.
+
+LIMITES QUE DEBE CONOCER
+ - Los conductores ven la flota y los viajes (con datos de pasajeros) porque su app los necesita.
+   Entregue acceso solo a conductores de confianza.
+ - La central debe estar abierta para asignar viajes y aplicar bloqueos.
+ - El bloqueo se aplica por telefono y cuenta: sin verificar el telefono por SMS (plan de pago de Firebase),
+   alguien puede crear otra cuenta con otro numero.
+ - Si cambia el dominio, agregarlo en Dominios autorizados (paso 4).
+
+USO DIARIO, TARIFAS, CHAT Y CATEGORIAS: ver las pestanas Tarifas y Base de pasajeros de la central.
+Mapa: OpenStreetMap sin clave (clave opcional de CARTO en mapa-config.js).
+
+TARIFA POR ZONA
+ - La tarifa se define por zona de salida (Pinamar y Ostende) en la pestana Tarifas; el pasajero no elige tarifa.
+ - Al finalizar el viaje, la central o el chofer pueden cambiar el importe final; queda registrado el original.
+CENTRAL EN LINEA
+ - Si la central esta cerrada o sin internet, conductores y pasajeros ven un aviso. Los viajes se asignan cuando vuelve.
+ - Si una zona no tiene moviles en cola por mas de 60 segundos, el viaje pasa al primer movil de la otra zona.
+IMPORTANTE: vuelva a pegar reglas-firebase.json en las Reglas de Firebase (cambiaron) y publique.
+
+SISTEMA DE MOTOS - NOTAS
+ - Use un proyecto de Firebase NUEVO (no el de remises) y un proyecto nuevo en Vercel: los datos no se mezclan.
+ - Direcciones: /  (pasajeros), /operador (central), /conductor (conductores).
+ - Novedades: boton SOS (pasajero y conductor) con alerta roja en la central, casco propio o provisto,
+   distancia y tiempo estimado hasta el pasajero, y moto 3D en el encabezado (se ve con internet).
+ - La patente se carga junto con el modelo de la moto al dar de alta al conductor.
+ - Pegue reglas-firebase.json en las Reglas (incluye el permiso para el SOS del pasajero).

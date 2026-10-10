@@ -1,0 +1,128 @@
+{
+ "rules": {
+  ".read": false,
+  ".write": false,
+  "admin": {
+   ".read": false,
+   ".write": false
+  },
+  "login": {
+   ".read": true,
+   ".write": "auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()"
+  },
+  "drivers": {
+   "$u": {
+    ".read": "auth != null && auth.uid === $u || auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()",
+    ".write": "auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()"
+   }
+  },
+  "cfg": {
+   ".read": "auth != null",
+   ".write": "auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()"
+  },
+  "seq": {
+   ".read": "auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()",
+   ".write": "auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()"
+  },
+  "pa": {
+   ".read": "auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()",
+   ".write": "auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()"
+  },
+  "pinfo": {
+   "$u": {
+    ".read": "auth != null && auth.uid === $u || auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()",
+    ".write": "auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()"
+   }
+  },
+  "pax": {
+   "$u": {
+    ".read": "auth != null && auth.uid === $u || auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()",
+    ".write": "auth != null && auth.uid === $u || auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()"
+   }
+  },
+  "ch": {
+   ".read": "auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val() || auth != null && root.child('drivers').child(auth.uid).exists()",
+   ".write": "auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()",
+   "$id": {
+    ".write": "auth != null && root.child('drivers').child(auth.uid).exists() && root.child('drivers').child(auth.uid).val() === $id"
+   }
+  },
+  "cj": {
+   ".read": "auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()",
+   ".write": "auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()",
+   "$k": {
+    ".write": "auth != null && root.child('drivers').child(auth.uid).exists() && !data.exists()"
+   }
+  },
+  "vi": {
+   ".indexOn": [
+    "ch",
+    "tel",
+    "uid"
+   ],
+   ".read": "auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val() || auth != null && root.child('drivers').child(auth.uid).exists()",
+   ".write": "auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()",
+   "$id": {
+    ".read": "auth != null && data.child('uid').val() === auth.uid",
+    ".write": "(auth != null && root.child('drivers').child(auth.uid).exists() && data.exists() && data.child('ch').val() + '' === root.child('drivers').child(auth.uid).val() && (newData.child('monto').val() === data.child('monto').val() || newData.child('est').val() === 'fin') && newData.child('uid').val() === data.child('uid').val()) || (auth != null && !data.exists() && newData.child('uid').val() === auth.uid && newData.child('est').val() === 'pend' && newData.child('ovr').val() != 1 && !newData.child('ch').exists()) || (auth != null && data.exists() && data.child('uid').val() === auth.uid && newData.child('uid').val() === auth.uid && newData.child('est').val() === 'canc' && data.child('est').val() !== 'fin' && newData.child('monto').val() === data.child('monto').val()) || (auth != null && data.exists() && data.child('uid').val() === auth.uid && newData.child('uid').val() === auth.uid && newData.child('est').val() === data.child('est').val() && newData.child('monto').val() === data.child('monto').val() && newData.child('sos').exists())"
+   }
+  },
+  "chat": {
+   "oc": {
+    "$c": {
+     ".read": "auth != null && root.child('drivers').child(auth.uid).exists() && root.child('drivers').child(auth.uid).val() === $c",
+     ".write": "auth != null && root.child('drivers').child(auth.uid).exists() && root.child('drivers').child(auth.uid).val() === $c"
+    }
+   },
+   "op": {
+    "$u": {
+     ".read": "auth != null && auth.uid === $u || auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()",
+     ".write": "auth != null && auth.uid === $u || auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()"
+    }
+   },
+   "cp": {
+    "$v": {
+     ".read": "auth != null && (root.child('vi').child($v).child('uid').val() === auth.uid || root.child('vi').child($v).child('ch').val() + '' === root.child('drivers').child(auth.uid).val())",
+     ".write": "auth != null && (root.child('vi').child($v).child('uid').val() === auth.uid || root.child('vi').child($v).child('ch').val() + '' === root.child('drivers').child(auth.uid).val())"
+    }
+   },
+   ".read": "auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()",
+   ".write": "auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()"
+  },
+  "aud": {
+   "oc": {
+    "$c": {
+     ".read": "auth != null && root.child('drivers').child(auth.uid).exists() && root.child('drivers').child(auth.uid).val() === $c",
+     ".write": "auth != null && root.child('drivers').child(auth.uid).exists() && root.child('drivers').child(auth.uid).val() === $c",
+     "$t": {
+      ".validate": "newData.isString() && newData.val().length < 400000"
+     }
+    }
+   },
+   "op": {
+    "$u": {
+     ".read": "auth != null && auth.uid === $u || auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()",
+     ".write": "auth != null && auth.uid === $u || auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()",
+     "$t": {
+      ".validate": "newData.isString() && newData.val().length < 400000"
+     }
+    }
+   },
+   "cp": {
+    "$v": {
+     ".read": "auth != null && (root.child('vi').child($v).child('uid').val() === auth.uid || root.child('vi').child($v).child('ch').val() + '' === root.child('drivers').child(auth.uid).val())",
+     ".write": "auth != null && (root.child('vi').child($v).child('uid').val() === auth.uid || root.child('vi').child($v).child('ch').val() + '' === root.child('drivers').child(auth.uid).val())",
+     "$t": {
+      ".validate": "newData.isString() && newData.val().length < 400000"
+     }
+    }
+   },
+   ".read": "auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()",
+   ".write": "auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()"
+  },
+  "hb": {
+   ".read": "auth != null",
+   ".write": "auth != null && auth.token.email != null && auth.token.email === root.child('admin').child('email').val()"
+  }
+ }
+}

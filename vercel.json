@@ -1,0 +1,15 @@
+{
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/pasajero",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/chofer",
+      "destination": "/conductor",
+      "permanent": false
+    }
+  ]
+}
